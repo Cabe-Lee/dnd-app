@@ -1,0 +1,177 @@
+{
+    "new": [
+        {
+            "id": 0,
+            "info": {
+                
+                "name": "none",
+                "class": ["none", "Artificer", "Barbarian", "Bard", "Cleric", 
+                "Druid", "Fighter", "Monk", "Paladin", "Ranger", "Rogue", 
+                "Sorcerer", "Warlock", "Wizard"],
+                "sub-class": ["none"],
+                "multi-class": ["none", "Artificer", "Barbarian", "Bard", 
+                "Cleric", "Druid", "Fighter", "Monk", "Paladin", "Ranger", 
+                "Rogue", "Sorcerer", "Warlock", "Wizard"],
+                "level": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 
+                15, 16, 17, 18, 19, 20],
+                "race": ["none", "Dragonborn", "Dwarf", "Elf", "Gnome", 
+                "Half-Elf", "Halfling", "Half-Orc", "Human", "Tiefling"],
+                "sub-race": ["none", "Dragonborn", "Dwarf", "Elf", "Gnome", 
+                "Half-Elf", "Halfling", "Half-Orc", "Human", "Tiefling"],
+                "creature-type": ["none", "Aberration", "Beast", "Celestial", 
+                "Construct", "Dragon", "Elemental", "Fey", "Fiend", "Giant", 
+                "Humanoid", "Monstrosity", "Ooze", "Plant", "Undead"],
+                "size": ["none", "Tiny", "Small", "Medium", "Large", "Huge", 
+                "Gargantuan"],
+                "alignment": ["none", "Lawful Good", "Neutral Good", "Chaotic Good", 
+                "Lawful Neutral", "True Neutral", "Chaotic Neutral", "Lawful Evil", 
+                "Neutral Evil", "Chaotic Evil"],
+                "background": ["none", "Acolyte", "Charlatan", "Criminal", 
+                "Entertainer", "Folk Hero", "Guild Artisan", "Hermit", "Noble", 
+                "Outlander", "Sage", "Sailor", "Soldier", "Urchin"]
+            },
+            "scores": {
+                "strength": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 
+                16, 17, 18, 19, 20],
+                "strength-modifier": [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5],
+                "dexterity": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 
+                16, 17, 18, 19, 20],
+                "dexterity-modifier": [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5],
+                "constitution": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 
+                15, 16, 17, 18, 19, 20],
+                "constitution-modifier": [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5],
+                "intelligence": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 
+                15, 16, 17, 18, 19, 20],
+                "intelligence-modifier": [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5],
+                "wisdom": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 
+                17, 18, 19, 20],
+                "wisdom-modifier": [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5],
+                "charisma": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 
+                16, 17, 18, 19, 20],
+                "charisma-modifier": [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5]
+            },
+            "skills": {
+                "proficiency": [2, 3, 4, 5, 6],
+                "expertise": [2, 3, 4, 5, 6],
+                "acrobatics(dex)": 0,
+                "animal-handling(wis)": 0,
+                "arcana(int)": 0,
+                "athletics(str)": 0,
+                "deception(cha)": 0,
+                "history(int)": 0,
+                "insight(wis)": 0,
+                "intimidation(cha)": 0,
+                "investigation(int)": 0,
+                "medicine(wis)": 0,
+                "nature(int)": 0,
+                "perception(wis)": 0,
+                "performance(cha)": 0,
+                "persuasion(cha)": 0,
+                "religion(int)": 0,
+                "sleight-of-hand(dex)": 0,
+                "stealth(dex)": 0,
+                "survival(wis)": 0
+            },
+            "inventory": [{
+                "total-weight": 0,
+                "items": [{
+                    "item": [{
+                        "equipped": false,
+                        "quantity": 0,
+                        "name": "none",
+                        "description": "none",
+                        "weight": 0,
+                        "value": 0,
+                        "magic-item-tag": false
+                    }],
+                    "pieces": {
+                        "coin-weight": 0.02,
+                        "coin-total-weight": 0,
+                        "cp": {
+                            "value": 0,
+                            "gold-value": 0.01
+                        },
+                        "sp": {
+                            "value": 0,
+                            "gold-value": 0.10
+                        },
+                        "ep": {
+                            "value": 0,
+                            "gold-value": 0.50
+                        },
+                        "gp": {
+                            "value": 0,
+                            "gold-value": 1.00
+                        },
+                        "pp": {
+                            "value": 0,
+                            "gold-value": 10.00
+                        }
+                    }
+                }]
+            }],
+            "spells": [{
+                "spell-slots": [{
+                    "1": 0,
+                    "2": 0,
+                    "3": 0,
+                    "4": 0,
+                    "5": 0,
+                    "6": 0,
+                    "7": 0,
+                    "8": 0,
+                    "9": 0
+                }],
+                "spell": {
+                    "id": 0,
+                    "name": "none",
+                    "spell-level": ["none", "cantrip", 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                    "spell-school": ["none", "abjuration", "conjuration", 
+                    "divination", "enchantment", "evocation", "illusion", 
+                    "necromancy", "transmutation"],
+                    "casting-time": ["none", "1 action", "1 bonus action", 
+                    "1 reaction", "1 round", "minute", "minutes", "hour", "hours"],
+                    "range": ["none", "Self", "( ft)", " ft", "Special", "Unlimited"],
+                    "area-of-effect": ["none", "cone", "cube", "cylinder", "line", 
+                    "line of sight", "radius", "sphere", "hemisphere"],
+                    "components": ["none", "verbal", "somatic", "material", 
+                    "custom material components"],
+                    "ritual-tag": ["none", true, false],
+                    "duration": ["none", "Instantaneous", "Concentration", "1 round", 
+                    "1 minute", "minutes", "1 hour", "hours", "Until dispelled", 
+                    "Unlimited"],
+                    "description": "none",
+                    "up-cast": ["none", true, false]
+                }
+            }],
+            "features": [{
+                "feature": {
+                    "id": 0,
+                    "name": "none",
+                    "feature-type": "none",
+                    "source-type": ["none", "class", "race", "background", "item"],
+                    "description": "none"
+                }
+            }],
+            "notes": "none"
+        }
+    ],
+    "characters": [
+        {
+            "id": 1,
+            "name": "Aragorn",
+            "class": "Ranger",
+            "sub-class": "none",
+            "multi-class": "none",
+            "level": [5, 0]
+        },
+        {
+            "id": 2,
+            "name": "Gandalf",
+            "class": "Wizard",
+            "sub-class": "none",
+            "multi-class": "none",
+            "level": [10, 0]
+        }
+    ]
+}
