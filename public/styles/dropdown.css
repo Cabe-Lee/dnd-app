@@ -1,0 +1,49 @@
+
+
+/* Dropdown used by dice-roller */
+#dice-dropdown.dropdown{
+  position:absolute;
+  background:#fff;
+  border:1px solid #ccc;
+  border-radius:6px;
+  padding:4px;
+  z-index:999;
+  max-width:220px;
+}
+
+#dice-dropdown .dropdown-item{
+  padding:6px 10px;
+  cursor:pointer;
+}
+
+#dice-dropdown .dropdown-item:hover{
+  background:#f2f2f2;
+}
+
+/* Dropdown used by character class picker */
+#class-dropdown.dropdown{
+  position:absolute;
+  background:#fff;
+  border:1px solid #ccc;
+  border-radius:6px;
+  padding:4px;
+  z-index:999;
+  max-width:280px;
+}
+
+#class-dropdown .dropdown-item{
+  padding:6px 10px;
+  cursor:pointer;
+}
+
+#class-dropdown .dropdown-item:hover,
+#class-dropdown .dropdown-item[aria-selected="true"]{
+  background:#f2f2f2;
+}
+
+#class-dropdown .dropdown-item.muted{
+  cursor:default;
+  opacity:0.75;
+}
+
+

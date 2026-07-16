@@ -166,4 +166,3 @@ server.listen(PORT, () => {
   watchPublicForChanges();
   openOrRefresh(url);
 });
-

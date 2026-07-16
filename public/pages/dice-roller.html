@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Dice Roller</title>
+        <script type="module" src="../scripts/dice-roller.js"></script>
+        <link rel="stylesheet" href="../styles/dropdown.css" />
+
+
+    </head>
+    <body>
+        <!-- Fix dice num -->
+        <h1>Dice Roller</h1>
+        <div id="dice-roller">
+            <input type="number" id="dice-num" placeholder="1"> d <input type="number" id="dice" placeholder="20" autocomplete="off"></input>
+            <div id="dice-dropdown" class="dropdown" hidden></div>
+            <span> + </span> <input type="number" id="modifier" placeholder="0"></input>
+
+            <p id="result"></p>
+            <button id="roll-button" type="button">Roll</button>
+            <p style="display:none"> </p>
+        </div>
+    </body>
+</html>
+

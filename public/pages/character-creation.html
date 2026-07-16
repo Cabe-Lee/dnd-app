@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Character Creation</title>
+        <script type="module" src="../scripts/index.js"></script>
+        <script type="module" src="../scripts/level-arrows.js"></script>
+        <script type="module" src="../scripts/race-dropdown.js"></script>
+        <script type="module" src="../scripts/alignment-dropdown.js"></script>
+        <script type="module" src="../scripts/ability-scores.js"></script>
+
+        <link rel="stylesheet" href="../styles/level-arrows.css" />
+        <link rel="stylesheet" href="../styles/dropdown.css" />
+    </head>
+    <body>
+        <h1>Character Creation</h1>
+        <div id="pc-form">
+            <form id="pc-info-form">
+                <p>Info</p>
+                <label for="name-input">Name</label>
+                <input type="text" id="name-input" placeholder="Gill Gob" autocomplete="off">
+
+                <div class="class-picker">
+                    <label for="class-input">Class</label>
+                    <input type="text" id="class-input" placeholder="Select a class..." autocomplete="off">
+                    <input type="hidden" id="class-slug-input" value="">
+                    <div id="class-dropdown" class="dropdown" hidden></div>
+                </div>
+                
+                <label for="subclass-input">Subclass</label>
+                <input type="text" id="subclass-input" placeholder="Subclass" autocomplete="off">
+
+                <div class="level-picker">
+                    <label for="level-input">Level</label>
+                    <input type="number" id="level-input" placeholder="1" autocomplete="off" min="1" max="20" step="1" readonly>
+                    <button type="button" id="level-up" aria-label="Increase level">▲</button>
+                    <button type="button" id="level-down" aria-label="Decrease level">▼</button>
+                </div>
+
+                <div class="proficiency-bonus-input">
+                    <label for="proficiency-bonus-input">Proficiency Bonus</label>
+                    <input type="number" id="proficiency-bonus-input" placeholder="+1 testing" readonly>
+                </div>
+                
+                <div class="race-picker">
+                    <label for="race-input">Race</label>
+                    <input type="text" id="race-input" placeholder="Select a race..." autocomplete="off">
+                    <input type="hidden" id="race-slug-input" value="">
+                    <div id="race-dropdown" class="dropdown" hidden></div>
+                </div>
+
+                <label for="alignment-input">Alignment</label>
+                <input type="text" id="alignment-input" placeholder="Select an alignment..." autocomplete="off">
+                <input type="hidden" id="alignment-slug-input" value="">
+                <div id="alignment-dropdown" class="dropdown" hidden></div>
+            </form>
+            <form id="pc-background-form">
+                <p>Background Builder</p>
+                <input type="text" id="background-input" placeholder="Background">
+                <input type="text" id="background-skill-1-input" placeholder="Skill">
+                <input type="text" id="background-skill-2-input" placeholder="Skill">
+                <input type="text" id="background-tool-1-input" placeholder="Tool or Language">
+                <input type="text" id="background-tool-2-input" placeholder="Tool or Language">
+                <input type="text" id="background-equipment -input" placeholder="Starting Equipment">
+                <input type="text" id="background-personality-trait-input" placeholder="Personality Trait">
+                <input type="text" id="background-ideal-input" placeholder="Ideal">
+                <input type="text" id="background-bond-input" placeholder="Bond">
+                <input type="text" id="background-flaw-input" placeholder="Flaw">
+            </form>
+            <form id="pc-stats-form">
+                <p>Determine Ability Scores Methods</p>
+                <input type="button" id="standard-array" name="ability-score-type" value="Standard Array (15, 14, 13, 12, 10, 8)">
+                <input type="button" id="point-buy" name="ability-score-type" value="Point Buy (27 points)">
+                <input type="button" id="roll-for-stats" name="ability-score-type" value="Roll 3d6 (3-18) for each stat">
+                <input type="button" id="custom-stats" name="abitity-score-type" value="Custom Stats">
+                <input type="button" id="reset-stats" name="ability-score-type" value="Reset Stats">
+                <p>Ability Scores</p>
+                <label for="strength-input">Strength</label>
+                <input type="number" id="strength-input" placeholder="8">
+                <button type="button" id="strength-down" aria-label="Strength down">▼</button>
+                <p></p>
+                <label for="dexterity-input">Dexterity</label>
+                <input type="number" id="dexterity-input" placeholder="8">
+                <button type="button" id="dexterity-up" aria-label="Dexterity up">▲</button>
+                <button type="button" id="dexterity-down" aria-label="Dexterity down">▼</button>
+                <p></p>
+                <label for="constitution-input">Constitution</label>
+                <input type="number" id="constitution-input" placeholder="8">
+                <button type="button" id="constitution-up" aria-label="Constitution up">▲</button> 
+                <button type="button" id="constitution-down" aria-label="Constitution down">▼</button>
+                <p></p>
+                <label for="intelligence-input">Intelligence</label>
+                <input type="number" id="intelligence-input" placeholder="8">
+                <button type="button" id="intelligence-up" aria-label="Intelligence up">▲</button>
+                <button type="button" id="intelligence-down" aria-label="Intelligence down">▼</button>
+                <p></p>
+                <label for="wisdom-input">Wisdom</label>
+                <input type="number" id="wisdom-input" placeholder="8">
+                <button type="button" id="wisdom-up" aria-label="Wisdom up">▲</button>
+                <button type="button" id="wisdom-down" aria-label="Wisdom down">▼</button>
+                <p></p>
+                <label for="charisma-input">Charisma</label>
+                <input type="number" id="charisma-input" placeholder="8">
+                <button type="button" id="charisma-up" aria-label="Charisma up">▲</button>
+                <p></p>
+            </form>
+            <form id="pc-saving-throws-form">
+                <p>Saving Throws (Ability Score + Proficiency Bonus)</p>
+                <input type="checkbox" id="strength-saving-throw-input" placeholder="0">
+                <label for="strength-saving-throw-input">Strength</label>
+                <input type="number" id="strength-saving-throw-modifier" placeholder="0" readonly>
+                <p></p>
+                <input type="checkbox" id="dexterity-saving-throw-input" placeholder="0">
+                <label for="dexterity-saving-throw-input">Dexterity</label>
+                <input type="number" id="dexterity-saving-throw-modifier" placeholder="0" readonly>
+                <p></p>
+                <input type="checkbox" id="constitution-saving-throw-input" placeholder="0">
+                <label for="constitution-saving-throw-input">Constitution</label>
+                <input type="number" id="constitution-saving-throw-modifier" placeholder="0" readonly>
+                <p></p>
+                <input type="checkbox" id="intelligence-saving-throw-input" placeholder="0">
+                <label for="intelligence-saving-throw-input">Intelligence</label>
+                <input type="number" id="intelligence-saving-throw-modifier" placeholder="0" readonly>
+                <p></p>
+                <input type="checkbox" id="wisdom-saving-throw-input" placeholder="0">
+                <label for="wisdom-saving-throw-input">Wisdom</label>
+                <input type="number" id="wisdom-saving-throw-modifier" placeholder="0" readonly>
+                <p></p>
+                <input type="checkbox" id="charisma-saving-throw-input" placeholder="0">
+                <label for="charisma-saving-throw-input">Charisma</label>
+                <input type="number" id="charisma-saving-throw-modifier" placeholder="0" readonly>
+            </form>
+            <form id="pc-hp-ac-input">
+                <p>Hit Points and Armor Class</p>
+                <p></p>
+                <label for="hit-dice-input">Hit Dice</label>
+                <input type="text" id="hit-dice-input" placeholder="d8">
+                <p></p>
+                <label for="hp-input">Hit Points + (CON)</label>
+                <input type="number" id="hp-input" placeholder="0">
+                <p></p>
+                <label for="ac-input">Armor Class + (DEX)</label>
+                <input type="number" id="ac-input" placeholder="10">
+            </form>
+            <form id="pc-skills-form">
+                <p>Skills</p>
+                <input type="checkbox" id="acrobatics-input" placeholder="0">
+                <label for="acrobatics-input">Acrobatics (DEX)</label>
+                <input type="number" id="acrobatics-modifier" placeholder="0" readonly>
+                <p></p>
+                <input type="checkbox" id="animal-handling-input" placeholder="0">
+                <label for="animal-handling-input">Animal Handling (WIS)</label>
+                <input type="number" id="animal-handling-modifier" placeholder="0" readonly>
+                <p></p>
+                <input type="checkbox" id="arcana-input" placeholder="0">
+                <label for="arcana-input">Arcana (INT)</label>
+                <input type="number" id="arcana-modifier" placeholder="0" readonly>
+                <p></p>
+                <input type="checkbox" id="athletics-input" placeholder="0">
+                <label for="athletics-input">Athletics (STR)</label>
+                <input type="number" id="athletics-modifier" placeholder="0" readonly>
+                <p></p>
+                <input type="checkbox" id="deception-input" placeholder="0">
+                <label for="deception-input">Deception (CHA)</label>
+                <input type="number" id="deception-modifier" placeholder="0" readonly>
+                <p></p>
+                <input type="checkbox" id="history-input" placeholder="0">
+                <label for="history-input">History (INT)</label>
+                <input type="number" id="history-modifier" placeholder="0" readonly>
+                <p></p>
+                <input type="checkbox" id="insight-input" placeholder="0">
+                <label for="insight-input">Insight (WIS)</label>
+                <input type="number" id="insight-modifier" placeholder="0" readonly>
+                <p></p>
+                <input type="checkbox" id="intimidation-input" placeholder="0">
+                <label for="intimidation-input">Intimidation (CHA)</label>
+                <input type="number" id="intimidation-modifier" placeholder="0" readonly>
+                <p></p>
+                <input type="checkbox" id="investigation-input" placeholder="0">
+                <label for="investigation-input">Investigation (INT)</label>
+                <input type="number" id="investigation-modifier" placeholder="0" readonly>
+                <p></p>
+                <input type="checkbox" id="medicine-input" placeholder="0">
+                <label for="medicine-input">Medicine (WIS)</label>
+                <input type="number" id="medicine-modifier" placeholder="0" readonly>
+                <p></p>
+                <input type="checkbox" id="nature-input" placeholder="0">
+                <label for="nature-input">Nature (WIS)</label>
+                <input type="number" id="nature-modifier" placeholder="0" readonly>
+                <p></p>
+                <input type="checkbox" id="perception-input" placeholder="0">
+                <label for="perception-input">Perception (WIS)</label>
+                <input type="number" id="perception-modifier" placeholder="0" readonly>
+                <p></p>
+                <input type="checkbox" id="performance-input" placeholder="0">
+                <label for="performance-input">Performance (CHA)</label>
+                <input type="number" id="performance-modifier" placeholder="0" readonly>
+                <p></p>
+                <input type="checkbox" id="persuasion-input" placeholder="0">
+                <label for="persuasion-input">Persuasion (CHA)</label>
+                <input type="number" id="persuasion-modifier" placeholder="0" readonly>
+                <p></p>
+                <input type="checkbox" id="religion-input" placeholder="0">
+                <label for="religion-input">Religion (INT)</label>
+                <input type="number" id="religion-modifier" placeholder="0" readonly>
+                <p></p>
+                <input type="checkbox" id="sleight-of-hand-input" placeholder="0">
+                <label for="sleight-of-hand-input">Sleight of Hand (DEX)</label>
+                <input type="number" id="sleight-of-hand-modifier" placeholder="0" readonly>
+                <p></p>
+                <input type="checkbox" id="stealth-input" placeholder="0">
+                <label for="stealth-input">Stealth (DEX)</label>
+                <input type="number" id="stealth-modifier" placeholder="0" readonly>
+                <p></p>
+                <input type="checkbox" id="survival-input" placeholder="0">
+                <label for="survival-input">Survival (WIS)</label>
+                <input type="number" id="survival-modifier" placeholder="0" readonly>
+                <p></p>
+            </form>
+
+            <button id="pc-submit">Submit</button>
+        </div>
+        <script></script>
+    </body>
+</html>
+

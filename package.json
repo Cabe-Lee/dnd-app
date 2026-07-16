@@ -13,6 +13,9 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "node": "^26.3.0"
+    "node": "^26.3.0",
+    "rest": "^2.0.0",
+    "swagger": "^0.0.1",
+    "vite": "^8.1.3"
   }
 }
