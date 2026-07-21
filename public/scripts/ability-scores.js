@@ -372,5 +372,241 @@ function initAbilityScores() {
   }
 }
 
+// Mirror character level into the Hit Dice section (readonly textbox).
+(function syncHitDiceLevel() {
+  const levelInput = document.getElementById('level-input');
+  const hitDiceLevelInput = document.getElementById('hit-dice-level-input');
+  if (!levelInput || !hitDiceLevelInput) return;
+
+  const sync = () => {
+    hitDiceLevelInput.value = levelInput.value ?? '';
+  };
+
+  levelInput.addEventListener('input', sync);
+  sync();
+})();
+
+// Sync skill modifiers based on ability scores.
+(function syncSkillModifiers() {
+  const skillToAbility = {
+    'acrobatics-modifier': 'dexterity-input',
+    'animal-handling-modifier': 'wisdom-input',
+    'arcana-modifier': 'intelligence-input',
+    'athletics-modifier': 'strength-input',
+    'deception-modifier': 'charisma-input',
+    'history-modifier': 'intelligence-input',
+    'insight-modifier': 'wisdom-input',
+    'intimidation-modifier': 'charisma-input',
+    'investigation-modifier': 'intelligence-input',
+    'medicine-modifier': 'wisdom-input',
+    'nature-modifier': 'intelligence-input',
+    'perception-modifier': 'wisdom-input',
+    'performance-modifier': 'charisma-input',
+    'persuasion-modifier': 'charisma-input',
+    'religion-modifier': 'intelligence-input',
+    'sleight-of-hand-modifier': 'dexterity-input',
+    'stealth-modifier': 'dexterity-input',
+    'survival-modifier': 'wisdom-input'
+  };
+
+  const proficiencyEl = document.getElementById('proficiency-bonus-input');
+
+  const getProficiencyBonus = () => {
+    const raw = proficiencyEl?.value;
+    if (raw === '' || raw === null || raw === undefined) return 0;
+    const n = Number.parseInt(raw, 10);
+    return Number.isNaN(n) ? 0 : n;
+  };
+
+  const getAbilityValue = (abilityInputId) => {
+    const el = document.getElementById(abilityInputId);
+    if (!el) return null;
+    const raw = el.value;
+    if (raw === '' || raw === null || raw === undefined) return null;
+    const n = Number.parseInt(raw, 10);
+    if (Number.isNaN(n)) return null;
+    return n;
+  };
+
+  const syncBaseMods = () => {
+    Object.entries(skillToAbility).forEach(([skillModifierId, abilityInputId]) => {
+      const skillEl = document.getElementById(skillModifierId);
+      if (!skillEl) return;
+
+      const abilityVal = getAbilityValue(abilityInputId);
+      if (abilityVal === null) {
+        skillEl.value = '';
+        skillEl.setAttribute('data-base-mod', '');
+        return;
+      }
+
+      const mod = abilityModifier(abilityVal);
+      if (mod === null || Number.isNaN(mod)) {
+        skillEl.value = '';
+        skillEl.setAttribute('data-base-mod', '');
+        return;
+      }
+
+      // Store ability-only base modifier; proficiency is applied in syncCheckedSkills().
+      skillEl.setAttribute('data-base-mod', String(mod));
+      skillEl.value = String(mod);
+    });
+  };
+
+  const skillIds = {
+    'acrobatics-input': 'acrobatics-modifier',
+    'animal-handling-input': 'animal-handling-modifier',
+    'arcana-input': 'arcana-modifier',
+    'athletics-input': 'athletics-modifier',
+    'deception-input': 'deception-modifier',
+    'history-input': 'history-modifier',
+    'insight-input': 'insight-modifier',
+    'intimidation-input': 'intimidation-modifier',
+    'investigation-input': 'investigation-modifier',
+    'medicine-input': 'medicine-modifier',
+    'nature-input': 'nature-modifier',
+    'perception-input': 'perception-modifier',
+    'performance-input': 'performance-modifier',
+    'persuasion-input': 'persuasion-modifier',
+    'religion-input': 'religion-modifier',
+    'sleight-of-hand-input': 'sleight-of-hand-modifier',
+    'stealth-input': 'stealth-modifier',
+    'survival-input': 'survival-modifier'
+  };
+
+  // Recompute ALL checked skills from scratch (base + proficiency) to avoid drift.
+  const syncCheckedSkills = () => {
+    const pb = getProficiencyBonus();
+
+    Object.entries(skillIds).forEach(([skillCheckboxId, skillModifierId]) => {
+      const checkbox = document.getElementById(skillCheckboxId);
+      const skillEl = document.getElementById(skillModifierId);
+      if (!checkbox || !skillEl) return;
+
+      const baseRaw = skillEl.getAttribute('data-base-mod');
+      const baseMod = baseRaw === null ? null : Number.parseInt(baseRaw, 10);
+      if (baseMod === null || Number.isNaN(baseMod)) {
+        skillEl.value = '';
+        return;
+      }
+
+      const next = baseMod + (checkbox.checked ? pb : 0);
+      skillEl.value = String(next);
+      skillEl.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+  };
+
+  // When ability scores change, recompute base mods then recompute checked totals.
+  abilityIds.forEach((abilityInputId) => {
+    const el = document.getElementById(abilityInputId);
+    if (!el) return;
+    el.addEventListener('input', () => {
+      syncBaseMods();
+      syncCheckedSkills();
+    });
+  });
+
+  // When a skill checkbox is toggled, just recompute checked skill totals (no drift).
+  Object.keys(skillIds).forEach((skillCheckboxId) => {
+    const checkbox = document.getElementById(skillCheckboxId);
+    if (!checkbox) return;
+    checkbox.addEventListener('change', syncCheckedSkills);
+  });
+
+  // When proficiency changes, recompute checked totals.
+  proficiencyEl?.addEventListener('input', syncCheckedSkills);
+
+  // Initial sync.
+  syncBaseMods();
+  syncCheckedSkills();
+})();
+
+// Sync saving throws (ability modifier + proficiency bonus when checked).
+(function syncSavingThrows() {
+  const proficiencyEl = document.getElementById('proficiency-bonus-input');
+  if (!proficiencyEl) return;
+
+  const savingThrowIds = {
+    'strength-saving-throw-input': 'strength-input',
+    'dexterity-saving-throw-input': 'dexterity-input',
+    'constitution-saving-throw-input': 'constitution-input',
+    'intelligence-saving-throw-input': 'intelligence-input',
+    'wisdom-saving-throw-input': 'wisdom-input',
+    'charisma-saving-throw-input': 'charisma-input'
+  };
+
+  const outputIds = {
+    'strength-saving-throw-input': 'strength-saving-throw-modifier',
+    'dexterity-saving-throw-input': 'dexterity-saving-throw-modifier',
+    'constitution-saving-throw-input': 'constitution-saving-throw-modifier',
+    'intelligence-saving-throw-input': 'intelligence-saving-throw-modifier',
+    'wisdom-saving-throw-input': 'wisdom-saving-throw-modifier',
+    'charisma-saving-throw-input': 'charisma-saving-throw-modifier'
+  };
+
+  const getProficiencyBonus = () => {
+    const raw = proficiencyEl.value;
+    if (raw === '' || raw === null || raw === undefined) return 0;
+    const n = Number.parseInt(raw, 10);
+    return Number.isNaN(n) ? 0 : n;
+  };
+
+  const getAbilityValue = (abilityInputId) => {
+    const el = document.getElementById(abilityInputId);
+    if (!el) return null;
+    const raw = el.value;
+    if (raw === '' || raw === null || raw === undefined) return null;
+    const n = Number.parseInt(raw, 10);
+    if (Number.isNaN(n)) return null;
+    return n;
+  };
+
+  const sync = () => {
+    const pb = getProficiencyBonus();
+
+    Object.entries(savingThrowIds).forEach(([checkboxId, abilityInputId]) => {
+      const checkbox = document.getElementById(checkboxId);
+      const outputEl = document.getElementById(outputIds[checkboxId]);
+      if (!checkbox || !outputEl) return;
+
+      const abilityVal = getAbilityValue(abilityInputId);
+      if (abilityVal === null) {
+        outputEl.value = '';
+        return;
+      }
+
+      const baseMod = abilityModifier(abilityVal);
+      if (baseMod === null || Number.isNaN(baseMod)) {
+        outputEl.value = '';
+        return;
+      }
+
+      const next = baseMod + (checkbox.checked ? pb : 0);
+      outputEl.value = String(next);
+      outputEl.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+  };
+
+  // Ability score changes affect base mods.
+  Object.values(savingThrowIds).forEach((abilityInputId) => {
+    const el = document.getElementById(abilityInputId);
+    if (!el) return;
+    el.addEventListener('input', sync);
+  });
+
+  // Checkbox toggles add/remove proficiency.
+  Object.keys(savingThrowIds).forEach((checkboxId) => {
+    const cb = document.getElementById(checkboxId);
+    if (!cb) return;
+    cb.addEventListener('change', sync);
+  });
+
+  // Proficiency changes affect checked values.
+  proficiencyEl.addEventListener('input', sync);
+
+  sync();
+})();
+
 initAbilityScores();
+// NOTE: initAbilityScores() is called above for skill/base ability sync.
 

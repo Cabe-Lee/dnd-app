@@ -33,11 +33,9 @@ function safeJoin(root, requestPath) {
 
 function closeExistingServerOnWindows(port) {
   if (process.platform !== 'win32') return;
-
   try {
     const cmd = `netstat -ano | findstr :${port}`;
     const output = child_process.execSync(cmd, { stdio: ['pipe', 'pipe', 'ignore'], encoding: 'utf8' });
-
     const pids = new Set(
       output
         .split(/\r?\n/)
@@ -46,7 +44,6 @@ function closeExistingServerOnWindows(port) {
         .map(line => line.split(/\s+/).pop())
         .filter(pid => pid && pid !== '0')
     );
-
     for (const pid of pids) {
       child_process.execSync(`taskkill /PID ${pid} /F`, { stdio: 'ignore' });
     }
@@ -78,7 +75,6 @@ function broadcastReload() {
 }
 
 function injectLiveReload(html) {
-  // Inject after closing </body> if possible, else append.
   const snippet = `\n<script>\n  (function(){\n    const es = new EventSource('/__livereload');\n    es.onmessage = function(e){\n      if(e && e.data === 'reload'){\n        window.location.reload();\n      }\n    };\n  })();\n</script>\n`;
   if (html.includes('</body>')) {
     return html.replace('</body>', `${snippet}</body>`);
@@ -87,8 +83,6 @@ function injectLiveReload(html) {
 }
 
 function watchPublicForChanges() {
-  // Watch for any file changes under public/ and trigger reload.
-  // fs.watch can emit lots of events; a small debounce helps.
   let timer = null;
   try {
     fs.watch(ROOT_DIR, { recursive: true }, () => {
@@ -96,7 +90,7 @@ function watchPublicForChanges() {
       timer = setTimeout(() => broadcastReload(), 100);
     });
   } catch {
-    // If recursive watch fails on some platforms, do nothing.
+    // ignore
   }
 }
 
@@ -105,6 +99,21 @@ closeExistingServerOnWindows(PORT);
 const server = http.createServer((req, res) => {
   const reqUrl = new URL(req.url, `http://${req.headers.host}`);
   let pathname = decodeURIComponent(reqUrl.pathname);
+
+  // CORS headers for all API responses
+  const setCors = () => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  };
+
+  // Handle preflight OPTIONS request
+  if (req.method === 'OPTIONS') {
+    setCors();
+    res.statusCode = 204;
+    res.end();
+    return;
+  }
 
   // SSE endpoint
   if (pathname === '/__livereload') {
@@ -115,9 +124,146 @@ const server = http.createServer((req, res) => {
       'Access-Control-Allow-Origin': '*',
     });
     res.write('\n');
-
     clients.add(res);
     req.on('close', () => clients.delete(res));
+    return;
+  }
+
+  // API: POST /api/characters — save new character
+  if (req.method === 'POST' && pathname === '/api/characters') {
+    setCors();
+    let body = '';
+    req.setEncoding('utf8');
+    req.on('data', (chunk) => (body += chunk));
+    req.on('end', () => {
+      try {
+        const data = JSON.parse(body);
+        const dbPath = path.join(ROOT_DIR, 'json', 'characters.json');
+
+        fs.readFile(dbPath, 'utf8', (readErr, raw) => {
+          if (readErr) {
+            console.error('Failed to read characters.json:', readErr.message);
+            res.statusCode = 500;
+            res.end(JSON.stringify({ error: 'Could not read database' }));
+            return;
+          }
+
+          let characters = [];
+          try {
+            characters = JSON.parse(raw);
+          } catch (e) {
+            console.error('Failed to parse characters.json:', e.message);
+            characters = [];
+          }
+
+          const maxId = characters.reduce((max, c) => Math.max(max, c.id || 0), 0);
+          data.id = maxId + 1;
+          characters.push(data);
+
+          fs.writeFile(dbPath, JSON.stringify(characters, null, 2), 'utf8', (writeErr) => {
+            if (writeErr) {
+              console.error('Failed to write characters.json:', writeErr.message);
+              res.statusCode = 500;
+              res.end(JSON.stringify({ error: 'Could not save character' }));
+              return;
+            }
+            console.log('Character saved with ID:', data.id);
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ success: true, id: data.id }));
+          });
+        });
+      } catch (parseErr) {
+        console.error('Failed to parse request body:', parseErr.message);
+        res.statusCode = 400;
+        res.end(JSON.stringify({ error: 'Invalid JSON' }));
+      }
+    });
+    return;
+  }
+
+  // API: PUT /api/characters/:id — update a character (skills/saving throws/ability scores)
+  const putMatch = pathname.match(/^\/api\/characters\/(\d+)$/);
+  if (req.method === 'PUT' && putMatch) {
+    setCors();
+    const characterId = Number(putMatch[1]);
+    let body = '';
+    req.setEncoding('utf8');
+    req.on('data', (chunk) => (body += chunk));
+    req.on('end', () => {
+      try {
+        const updates = JSON.parse(body);
+        const dbPath = path.join(ROOT_DIR, 'json', 'characters.json');
+
+        fs.readFile(dbPath, 'utf8', (readErr, raw) => {
+          if (readErr) {
+            res.statusCode = 500;
+            res.end(JSON.stringify({ error: 'Could not read database' }));
+            return;
+          }
+
+          let characters = [];
+          try {
+            characters = JSON.parse(raw);
+          } catch (e) {
+            res.statusCode = 500;
+            res.end(JSON.stringify({ error: 'Invalid database' }));
+            return;
+          }
+
+          const idx = characters.findIndex(c => c.id === characterId);
+          if (idx === -1) {
+            res.statusCode = 404;
+            res.end(JSON.stringify({ error: 'Character not found' }));
+            return;
+          }
+
+          // Merge updates into the character
+          if (updates.skills) Object.assign(characters[idx].skills, updates.skills);
+          if (updates.savingThrows) Object.assign(characters[idx].savingThrows, updates.savingThrows);
+          if (updates.abilityScores) characters[idx].abilityScores = updates.abilityScores;
+
+          fs.writeFile(dbPath, JSON.stringify(characters, null, 2), 'utf8', (writeErr) => {
+            if (writeErr) {
+              res.statusCode = 500;
+              res.end(JSON.stringify({ error: 'Could not save updates' }));
+              return;
+            }
+            console.log(`Character ${characterId} updated`);
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ success: true }));
+          });
+        });
+      } catch (parseErr) {
+        res.statusCode = 400;
+        res.end(JSON.stringify({ error: 'Invalid JSON' }));
+      }
+    });
+    return;
+  }
+
+  // API: GET /api/characters — list all characters
+  if (req.method === 'GET' && pathname === '/api/characters') {
+    setCors();
+    const dbPath = path.join(ROOT_DIR, 'json', 'characters.json');
+    fs.readFile(dbPath, 'utf8', (readErr, raw) => {
+      if (readErr) {
+        console.error('Failed to read characters.json:', readErr.message);
+        res.statusCode = 500;
+        res.end(JSON.stringify({ error: 'Could not read database' }));
+        return;
+      }
+      try {
+        const characters = JSON.parse(raw);
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify(characters));
+      } catch (e) {
+        res.statusCode = 500;
+        res.end(JSON.stringify({ error: 'Invalid database' }));
+      }
+    });
     return;
   }
 

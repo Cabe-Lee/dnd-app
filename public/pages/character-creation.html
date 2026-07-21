@@ -9,6 +9,10 @@
         <script type="module" src="../scripts/race-dropdown.js"></script>
         <script type="module" src="../scripts/alignment-dropdown.js"></script>
         <script type="module" src="../scripts/ability-scores.js"></script>
+        <script type="module" src="../scripts/hit-dice.js"></script>
+        <script type="module" src="../scripts/ability-swaps.js"></script>
+        <script type="module" src="../scripts/background-skills-dropdown.js"></script>
+        <script type="module" src="../scripts/character-creation-validation.js"></script>
 
         <link rel="stylesheet" href="../styles/level-arrows.css" />
         <link rel="stylesheet" href="../styles/dropdown.css" />
@@ -17,65 +21,75 @@
         <h1>Character Creation</h1>
         <div id="pc-form">
             <form id="pc-info-form">
-                <p>Info</p>
+                <h3>Info</h3>
+                <p>The numbers and information on the sheet can be changed after character creation.</p>
                 <label for="name-input">Name</label>
                 <input type="text" id="name-input" placeholder="Gill Gob" autocomplete="off">
-
-                <div class="class-picker">
-                    <label for="class-input">Class</label>
-                    <input type="text" id="class-input" placeholder="Select a class..." autocomplete="off">
-                    <input type="hidden" id="class-slug-input" value="">
-                    <div id="class-dropdown" class="dropdown" hidden></div>
-                </div>
-                
-                <label for="subclass-input">Subclass</label>
-                <input type="text" id="subclass-input" placeholder="Subclass" autocomplete="off">
-
-                <div class="level-picker">
-                    <label for="level-input">Level</label>
-                    <input type="number" id="level-input" placeholder="1" autocomplete="off" min="1" max="20" step="1" readonly>
-                    <button type="button" id="level-up" aria-label="Increase level">▲</button>
-                    <button type="button" id="level-down" aria-label="Decrease level">▼</button>
-                </div>
-
-                <div class="proficiency-bonus-input">
-                    <label for="proficiency-bonus-input">Proficiency Bonus</label>
-                    <input type="number" id="proficiency-bonus-input" placeholder="+1 testing" readonly>
-                </div>
-                
-                <div class="race-picker">
-                    <label for="race-input">Race</label>
-                    <input type="text" id="race-input" placeholder="Select a race..." autocomplete="off">
-                    <input type="hidden" id="race-slug-input" value="">
-                    <div id="race-dropdown" class="dropdown" hidden></div>
-                </div>
-
+                <p></p>
+                <label for="class-input">Class</label>
+                <input type="text" id="class-input" placeholder="Select a class..." autocomplete="off">
+                <input type="hidden" id="class-slug-input" value="">
+                <div id="class-dropdown" class="dropdown" hidden></div>
+                <p></p>
+                <label for="level-input">Level</label>
+                <input type="number" id="level-input" placeholder="1" autocomplete="off" min="1" max="20" step="1" value="1" readonly>
+                <button type="button" id="level-up" aria-label="Increase level">▲</button>
+                <button type="button" id="level-down" aria-label="Decrease level">▼</button>
+                <p></p>
+                <label for="proficiency-bonus-input">Proficiency Bonus</label>
+                <input type="number" id="proficiency-bonus-input" placeholder="+1 testing" readonly>
+                <p></p>
+                <label for="race-input">Race</label>
+                <input type="text" id="race-input" placeholder="Select a race..." autocomplete="off">
+                <input type="hidden" id="race-slug-input" value="">
+                <div id="race-dropdown" class="dropdown" hidden></div>
+                <p></p>
                 <label for="alignment-input">Alignment</label>
                 <input type="text" id="alignment-input" placeholder="Select an alignment..." autocomplete="off">
                 <input type="hidden" id="alignment-slug-input" value="">
                 <div id="alignment-dropdown" class="dropdown" hidden></div>
             </form>
             <form id="pc-background-form">
-                <p>Background Builder</p>
+                <h3>Background Builder</h3>
+                <p>Custom backgrounds rules: 2 skills, and 2 tools proficiencies or languages discussed with the DM.</p>
+                <p>Equipment will available to after character creations.</p>
+                <p>Personality traits, ideals, bonds, and flaws are optional.</p>
+                <label for="background-input">Background</label>
                 <input type="text" id="background-input" placeholder="Background">
-                <input type="text" id="background-skill-1-input" placeholder="Skill">
-                <input type="text" id="background-skill-2-input" placeholder="Skill">
+                <p></p>
+                <label for="background-skill-1-input">Skill 1</label>
+                <input type="text" id="background-skill-1-input" placeholder="Skill..." autocomplete="off">
+                <div id="background-skill-1-dropdown" class="dropdown" hidden></div>
+                <p></p>
+                <label for="background-skill-2-input">Skill 2</label>
+                <input type="text" id="background-skill-2-input" placeholder="Skill..." autocomplete="off">
+                <div id="background-skill-2-dropdown" class="dropdown" hidden></div>
+                <p></p>
+                <label for="background-tool-1-input">Tool or Language 1</label>
                 <input type="text" id="background-tool-1-input" placeholder="Tool or Language">
+                <p></p>
+                <label for="background-tool-2-input">Tool or Language 2</label>
                 <input type="text" id="background-tool-2-input" placeholder="Tool or Language">
-                <input type="text" id="background-equipment -input" placeholder="Starting Equipment">
+                <p></p>
+                <label for="background-personality-trait-input">Personality Trait</label>
                 <input type="text" id="background-personality-trait-input" placeholder="Personality Trait">
+                <p></p>
+                <label for="background-ideal-input">Ideal</label>
                 <input type="text" id="background-ideal-input" placeholder="Ideal">
+                <p></p>
+                <label for="background-bond-input">Bond</label>
                 <input type="text" id="background-bond-input" placeholder="Bond">
+                <p></p>
+                <label for="background-flaw-input">Flaw</label>
                 <input type="text" id="background-flaw-input" placeholder="Flaw">
             </form>
             <form id="pc-stats-form">
-                <p>Determine Ability Scores Methods</p>
+                <h3>Determine Ability Scores Methods</h3>
                 <input type="button" id="standard-array" name="ability-score-type" value="Standard Array (15, 14, 13, 12, 10, 8)">
                 <input type="button" id="point-buy" name="ability-score-type" value="Point Buy (27 points)">
                 <input type="button" id="roll-for-stats" name="ability-score-type" value="Roll 3d6 (3-18) for each stat">
-                <input type="button" id="custom-stats" name="abitity-score-type" value="Custom Stats">
-                <input type="button" id="reset-stats" name="ability-score-type" value="Reset Stats">
-                <p>Ability Scores</p>
+                <input type="button" id="reset-stats" name="ability-score-type" value="Custom Stats">
+                <h3>Ability Scores</h3>
                 <label for="strength-input">Strength</label>
                 <input type="number" id="strength-input" placeholder="8">
                 <button type="button" id="strength-down" aria-label="Strength down">▼</button>
@@ -106,45 +120,61 @@
                 <p></p>
             </form>
             <form id="pc-saving-throws-form">
-                <p>Saving Throws (Ability Score + Proficiency Bonus)</p>
+                <h3>Saving Throws (Ability Score + Proficiency Bonus)</h3>
                 <input type="checkbox" id="strength-saving-throw-input" placeholder="0">
                 <label for="strength-saving-throw-input">Strength</label>
-                <input type="number" id="strength-saving-throw-modifier" placeholder="0" readonly>
+                <input type="number" id="strength-saving-throw-modifier" placeholder="0">
                 <p></p>
                 <input type="checkbox" id="dexterity-saving-throw-input" placeholder="0">
                 <label for="dexterity-saving-throw-input">Dexterity</label>
-                <input type="number" id="dexterity-saving-throw-modifier" placeholder="0" readonly>
+                <input type="number" id="dexterity-saving-throw-modifier" placeholder="0">
                 <p></p>
                 <input type="checkbox" id="constitution-saving-throw-input" placeholder="0">
                 <label for="constitution-saving-throw-input">Constitution</label>
-                <input type="number" id="constitution-saving-throw-modifier" placeholder="0" readonly>
+                <input type="number" id="constitution-saving-throw-modifier" placeholder="0">
                 <p></p>
                 <input type="checkbox" id="intelligence-saving-throw-input" placeholder="0">
                 <label for="intelligence-saving-throw-input">Intelligence</label>
-                <input type="number" id="intelligence-saving-throw-modifier" placeholder="0" readonly>
+                <input type="number" id="intelligence-saving-throw-modifier" placeholder="0">
                 <p></p>
                 <input type="checkbox" id="wisdom-saving-throw-input" placeholder="0">
                 <label for="wisdom-saving-throw-input">Wisdom</label>
-                <input type="number" id="wisdom-saving-throw-modifier" placeholder="0" readonly>
+                <input type="number" id="wisdom-saving-throw-modifier" placeholder="0">
                 <p></p>
                 <input type="checkbox" id="charisma-saving-throw-input" placeholder="0">
                 <label for="charisma-saving-throw-input">Charisma</label>
-                <input type="number" id="charisma-saving-throw-modifier" placeholder="0" readonly>
+                <input type="number" id="charisma-saving-throw-modifier" placeholder="0">
             </form>
             <form id="pc-hp-ac-input">
-                <p>Hit Points and Armor Class</p>
+                <h3>Hit Points and Armor Class</h3>
                 <p></p>
                 <label for="hit-dice-input">Hit Dice</label>
-                <input type="text" id="hit-dice-input" placeholder="d8">
+
+                <input type="number" id="hit-dice-level-input" min="1" max="20" step="1" value="1" readonly>
+
+                <select id="hit-dice-input" name="hit-dice-input">
+                    <option value="d4">d4</option>
+                    <option value="d6">d6</option>
+                    <option value="d8" selected>d8</option>
+                    <option value="d10">d10</option>
+                    <option value="d12">d12</option>
+                </select>
+                <button type="button" id="hit-dice-roll" aria-label="Roll Hit Points">Roll Hit Points</button>
+                <button type="button" id="hit-dice-full" aria-label="Hit Dice down">Take the Full Amount</button>
                 <p></p>
                 <label for="hp-input">Hit Points + (CON)</label>
                 <input type="number" id="hp-input" placeholder="0">
                 <p></p>
+                <label for="hp-left-input">Hit Points Left</label>
+                <input type="number" id="hp-left-input" placeholder="0">
+                <p></p>
                 <label for="ac-input">Armor Class + (DEX)</label>
-                <input type="number" id="ac-input" placeholder="10">
+                <input type="number" id="ac-input" placeholder="10 ... Please enter">
             </form>
             <form id="pc-skills-form">
-                <p>Skills</p>
+                <h3>Skills</h3>
+                <p>(Ability Score) + (Proficiency if checked)</p>
+                <p>Please check the 2014 rules for what class and background skills to choose from.</p>
                 <input type="checkbox" id="acrobatics-input" placeholder="0">
                 <label for="acrobatics-input">Acrobatics (DEX)</label>
                 <input type="number" id="acrobatics-modifier" placeholder="0" readonly>
@@ -219,9 +249,8 @@
                 <p></p>
             </form>
 
+            <div id="pc-validation-message" style="margin: 12px 0; font-weight: 600; min-height: 1.5em;"></div>
             <button id="pc-submit">Submit</button>
         </div>
-        <script></script>
     </body>
 </html>
-

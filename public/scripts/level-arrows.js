@@ -22,8 +22,8 @@ function initLevelArrows() {
   const upBtn = document.getElementById('level-up');
   const downBtn = document.getElementById('level-down');
   const proficiencyEl = document.getElementById('proficiency-bonus-input');
-
   if (!inputEl || !upBtn || !downBtn || !proficiencyEl) return;
+
 
   const MIN = 1;
   const MAX = 20;
@@ -36,6 +36,7 @@ function initLevelArrows() {
     proficiencyEl.value = String(pb);
 
   }
+
 
   function bump(delta) {
 

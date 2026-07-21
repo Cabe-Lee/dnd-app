@@ -6,22 +6,51 @@
     <title>PC Sheet</title>
 </head>
 <body>
-    <form id="pc-equipment-form">
-                <p>Equipment Creator</p>
-                <input type="text" id="equipment-quantity-input" placeholder="Quantity">
-                <input type="text" id="equipment-input" placeholder="Equipment">
-                <input type="text" id="equipment-description-input" placeholder="Description">
-            </form>
-            <form id="pc-spells-form">
-                <p>Spell Creator</p>
-                <input type="text" id="spell-name-input" placeholder="Spell Name">
-                <input type="text" id="spell-level-input" placeholder="Spell Level">
-                <input type="text" id="spell-school-input" placeholder="Spell School">
-                <input type="text" id="spell-casting-time-input" placeholder="Casting Time">
-                <input type="text" id="spell-range-input" placeholder="Range">
-                <input type="text" id="spell-components-input" placeholder="Components">
-                <input type="text" id="spell-duration-input" placeholder="Duration">
-                <input type="text" id="spell-description-input" placeholder="Description">
-            </form>
+    <h1>Character Sheet</h1>
+    <div id="pc-sheet" style="max-width: 800px; margin: 0 auto; padding: 20px;">
+        <div id="pc-loading" style="color: #888;">Loading character...</div>
+        <div id="pc-content" style="display: none;">
+
+            <div style="display: flex; gap: 24px; align-items: baseline; flex-wrap: wrap; margin-bottom: 20px;">
+                <h2 id="pc-name" style="margin: 0;"></h2>
+                <span id="pc-race-class" style="font-size: 1.1em; color: #aaa;"></span>
+                <span id="pc-level" style="font-size: 1.1em; color: #aaa;"></span>
+                <span id="pc-alignment" style="font-size: 1em; color: #888;"></span>
+            </div>
+
+            <div style="border: 1px solid #444; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+                <h3>Ability Scores</h3>
+                <div id="pc-abilities" style="display: flex; gap: 16px; flex-wrap: wrap;"></div>
+
+            <div style="border: 1px solid #444; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+                <h3>Saving Throws</h3>
+                <div id="pc-saving-throws" style="display: flex; gap: 16px; flex-wrap: wrap;"></div>
+
+            <div style="border: 1px solid #444; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+                <h3>Skills</h3>
+                <div id="pc-skills" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px;"></div>
+
+            <div style="border: 1px solid #444; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+                <h3>Combat</h3>
+                <div style="display: flex; gap: 32px; flex-wrap: wrap;">
+                    <div><strong>Hit Points (Max):</strong> <span id="pc-hp"></span></div>
+                    <div><strong>Hit Points Left:</strong> <input type="number" id="pc-hp-left" style="width: 60px;"></div>
+                    <div><strong>Armor Class:</strong> <span id="pc-ac"></span></div>
+                    <div><strong>Hit Dice:</strong> <span id="pc-hit-dice"></span></div>
+                    <div><strong>Proficiency Bonus:</strong> <span id="pc-prof-bonus"></span></div>
+            </div>
+
+            <div style="border: 1px solid #444; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
+                <h3>Background &amp; Personality</h3>
+                <div><strong>Background:</strong> <span id="pc-background"></span></div>
+                <div><strong>Personality Trait:</strong> <span id="pc-personality"></span></div>
+                <div><strong>Ideals:</strong> <span id="pc-ideals"></span></div>
+                <div><strong>Bonds:</strong> <span id="pc-bonds"></span></div>
+                <div><strong>Flaws:</strong> <span id="pc-flaws"></span></div>
+                <div><strong>Equipment:</strong> <span id="pc-equipment"></span></div>
+
+        </div>
+
+    <script type="module" src="../scripts/pc.js"></script>
 </body>
 </html>
