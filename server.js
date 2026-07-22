@@ -3,6 +3,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { URL } = require('node:url');
 const child_process = require('node:child_process');
+const { handleMonstersApi } = require('./monsters-api');
 
 const PORT = Number(process.env.PORT || 3000);
 const ROOT_DIR = path.join(__dirname, 'public');
@@ -484,6 +485,25 @@ const server = http.createServer((req, res) => {
         res.end(JSON.stringify({ error: 'Invalid database' }));
       }
     });
+    return;
+  }
+
+  // Extended Monster API (see monsters-api.js) — SRD lookup, homebrew monsters, AI art
+  if (pathname.startsWith('/api/monsters')) {
+    setCors();
+    handleMonstersApi(req, res, pathname, req.method)
+      .then((handled) => {
+        if (!handled) {
+          res.statusCode = 404;
+          res.setHeader('Content-Type', 'application/json; charset=utf-8');
+          res.end(JSON.stringify({ error: 'Not found.' }));
+        }
+      })
+      .catch((error) => {
+        res.statusCode = 500;
+        res.setHeader('Content-Type', 'application/json; charset=utf-8');
+        res.end(JSON.stringify({ error: error.message || 'Server error.' }));
+      });
     return;
   }
 

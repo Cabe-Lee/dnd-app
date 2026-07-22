@@ -1,7 +1,9 @@
 // Shared race API + dropdown setup
 
 function getBaseUrl() {
+  // Prefer Vite env; fall back to runtime window var; then default.
   try {
+    // eslint-disable-next-line no-undef
     return import.meta?.env?.EXTERNAL_API_BASE_URL || window?.EXTERNAL_API_BASE_URL || 'https://www.dnd5eapi.co/api';
   } catch {
     return window?.EXTERNAL_API_BASE_URL || 'https://www.dnd5eapi.co/api';
@@ -21,6 +23,13 @@ function normalize(str) {
 }
 
 export async function fetchRacesAndSetupDropdown({ inputEl, dropdownEl, slugEl }) {
+  function positionDropdown() {
+    const rect = inputEl.getBoundingClientRect();
+    dropdownEl.style.left = `${rect.left + window.scrollX}px`;
+    dropdownEl.style.top = `${rect.bottom + window.scrollY + 4}px`;
+    dropdownEl.style.minWidth = `${rect.width}px`;
+  }
+
   function hide() {
     dropdownEl.hidden = true;
     dropdownEl.innerHTML = '';
@@ -28,6 +37,7 @@ export async function fetchRacesAndSetupDropdown({ inputEl, dropdownEl, slugEl }
 
 
   function show(list) {
+    positionDropdown();
     dropdownEl.innerHTML = '';
     dropdownEl.hidden = false;
 
@@ -75,6 +85,7 @@ export async function fetchRacesAndSetupDropdown({ inputEl, dropdownEl, slugEl }
       : races.slice(0, 12);
 
     if (list.length === 0) {
+      positionDropdown();
       show([]);
       dropdownEl.innerHTML = '<div class="dropdown-item muted">No races found.</div>';
       return;
@@ -84,6 +95,7 @@ export async function fetchRacesAndSetupDropdown({ inputEl, dropdownEl, slugEl }
   }
 
   inputEl.addEventListener('focus', () => {
+    // Only render after races are loaded; render() uses the local `races` variable.
     render();
   });
 
@@ -139,8 +151,22 @@ export async function fetchRacesAndSetupDropdown({ inputEl, dropdownEl, slugEl }
     if (!clickedInside) hide();
   });
 
+  window.addEventListener('resize', () => {
+    if (!dropdownEl.hidden) positionDropdown();
+  });
+
+  window.addEventListener('scroll', () => {
+    if (!dropdownEl.hidden) positionDropdown();
+  }, true);
+
+  // Initial data + state
   const races = await fetchRaces();
   dropdownEl.hidden = true;
   dropdownEl.innerHTML = '';
   slugEl.value = '';
+
+  // Keep dropdown hidden until user focuses/uses the textbox.
+  // render() will be called by the focus/input handlers.
+
 }
+

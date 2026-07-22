@@ -3,14 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monsters</title>
+    <title>Player Signup</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../styles/main.css">
-    <link rel="stylesheet" href="../styles/monsters.css">
-    <script src="../scripts/partials.js" defer></script>
-    <script type="module" src="../scripts/monsters-library.js" defer></script>
+    <link rel="stylesheet" href="../styles/auth.css">
 </head>
 <body>
     <header class="site-header">
@@ -45,24 +43,46 @@
             <a href="signup.html" class="tool-btn tool-btn-accent">Sign Up</a>
         </div>
     </header>
-    <main class="container monster-theme">
-        <section class="card">
-            <div class="button-row">
-                <a class="tool-btn tool-btn-accent" href="monster.html?new=1">+ Create Custom Monster</a>
-            </div>
-            <h2 class="card-title bestiary-title">Bestiary</h2>
-            <p class="hint">Search the SRD monster library, or browse what your table has homebrewed.</p>
+    <main class="container">
+    <h2 class="card-title">Player Signup</h2>
+    <div id="form-error"></div>
+    <form id="signup-form" novalidate>
+        <div style="margin-bottom: 12px;">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <span id="username-error" class="error-message">Username must be at least 3 characters (letters, numbers, underscores only).</span>
+            <span id="username-success" class="success-message">✓ Valid</span>
+        </div>
 
-            <div class="bestiary-search">
-                <input type="search" id="monster-search" placeholder="Search the bestiary...">
-            </div>
-            <p class="bestiary-status" id="monster-list-status"></p>
+        <div style="margin-bottom: 12px;">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            <span id="email-error" class="error-message">Please enter a valid email address.</span>
+            <span id="email-success" class="success-message">✓ Valid</span>
+        </div>
 
-            <div class="monster-grid" id="monster-grid"></div>
-        </section>
+        <div style="margin-bottom: 12px;">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <span id="password-error" class="error-message">Password must be at least 8 characters with uppercase, lowercase, and a number.</span>
+            <span id="password-success" class="success-message">✓ Valid</span>
+        </div>
+
+        <div style="margin-bottom: 16px;">
+            <label for="confirm-password">Confirm Password:</label>
+            <input type="password" id="confirm-password" name="confirm-password" required>
+            <span id="confirm-password-error" class="error-message">Passwords do not match.</span>
+            <span id="confirm-password-success" class="success-message">✓ Match</span>
+        </div>
+
+        <button type="submit">Signup</button>
+        <button type="button" onclick="window.location.href='login.html'">Already have an account? Login</button>
+    </form>
     </main>
     <footer>
         <p>&copy; 2026 D&amp;D App. All rights reserved.</p>
     </footer>
+
+    <script src="../scripts/auth.js"></script>
 </body>
 </html>

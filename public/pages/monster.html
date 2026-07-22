@@ -3,25 +3,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
+    <title>Monster</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link rel="stylesheet" href="../styles/monsters.css">
+    <script src="../scripts/partials.js" defer></script>
+    <script type="module" src="../scripts/monster-detail.js" defer></script>
 </head>
 <body>
-    <h2>Monster</h2>
-    <h3>For individual monster page, change as much you need to display the stats and action texts of one of selected monster from the list from the last page through the external api.</h3>
-    <p>Name: <span id="monster-name"></span></p>
-    <p>Type: <span id="monster-type"></span></p>
-    <p>Size: <span id="monster-size"></span></p>
-    <p>Alignment: <span id="monster-alignment"></span></p>
-    <p>Armor Class: <span id="monster-ac"></span></p>
-    <p>Hit Points: <span id="monster-hp"></span></p>
-    <p>Speed: <span id="monster-speed"></span></p>
-    <p>Strength: <span id="monster-strength"></span></p>
-    <p>Dexterity: <span id="monster-dexterity"></span></p>
-    <p>Constitution: <span id="monster-constitution"></span></p>
-    <p>Intelligence: <span id="monster-intelligence"></span></p>
-    <p>Wisdom: <span id="monster-wisdom"></span></p>
-    <p>Charisma: <span id="monster-charisma"></span></p>
-    <p>Challenge Rating: <span id="monster-cr"></span></p>
-    <p>Actions: <span id="monster-actions"></span></p>
+    <header class="site-header">
+        <div class="header-inner">
+            <div class="brand">
+                <svg viewBox="0 0 100 100" class="d20-emblem" aria-hidden="true">
+                    <polygon points="50,4 89,26 89,74 50,96 11,74 11,26" class="d20-outer"/>
+                    <polygon points="50,22 74,62 26,62" class="d20-face"/>
+                    <line x1="50" y1="4"  x2="50" y2="22"/>
+                    <line x1="89" y1="26" x2="74" y2="62"/>
+                    <line x1="11" y1="26" x2="26" y2="62"/>
+                    <line x1="89" y1="74" x2="74" y2="62"/>
+                    <line x1="11" y1="74" x2="26" y2="62"/>
+                    <line x1="50" y1="96" x2="74" y2="62"/>
+                    <line x1="50" y1="96" x2="26" y2="62"/>
+                    <text x="50" y="53" class="d20-num">20</text>
+                </svg>
+                <div class="brand-text">
+                    <p class="eyebrow">Campaign companion</p>
+                    <h1>D&amp;D App</h1>
+                </div>
+            </div>
+            <nav aria-label="Main navigation">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="dice-roller.html">Dice Roller</a></li>
+                    <li><a href="characters.html">Characters</a></li>
+                    <li><a href="monsters.html">Monsters</a></li>
+                    <li><a target="_blank" rel="noopener" href="https://dnd5e.wikidot.com/">Rules (2014)</a></li>
+                </ul>
+            </nav>
+            <a href="signup.html" class="tool-btn tool-btn-accent">Sign Up</a>
+        </div>
+    </header>
+    <main class="container monster-theme">
+        <div class="button-row">
+            <a class="tool-btn" href="monsters.html">&larr; Back to Bestiary</a>
+        </div>
+
+        <p class="hint" id="monster-view-status" hidden></p>
+
+        <section class="card" id="monster-view" hidden>
+            <h2 class="card-title bestiary-title" id="monster-name">Monster</h2>
+
+            <div class="stat-block-grid">
+                <div class="stat-block-field"><span class="label">Size</span><span class="value" id="monster-size"></span></div>
+                <div class="stat-block-field"><span class="label">Type</span><span class="value" id="monster-type"></span></div>
+                <div class="stat-block-field"><span class="label">Alignment</span><span class="value" id="monster-alignment"></span></div>
+                <div class="stat-block-field"><span class="label">Armor Class</span><span class="value" id="monster-ac"></span></div>
+                <div class="stat-block-field"><span class="label">Hit Points</span><span class="value" id="monster-hp"></span></div>
+                <div class="stat-block-field"><span class="label">Hit Dice</span><span class="value" id="monster-hit-dice"></span></div>
+                <div class="stat-block-field"><span class="label">Speed</span><span class="value" id="monster-speed"></span></div>
+                <div class="stat-block-field"><span class="label">Challenge Rating</span><span class="value"><span class="cr-badge" id="monster-cr"></span></span></div>
+            </div>
+
+            <div class="stat-block-grid">
+                <div class="stat-block-field"><span class="label">STR</span><span class="value" id="monster-strength"></span></div>
+                <div class="stat-block-field"><span class="label">DEX</span><span class="value" id="monster-dexterity"></span></div>
+                <div class="stat-block-field"><span class="label">CON</span><span class="value" id="monster-constitution"></span></div>
+                <div class="stat-block-field"><span class="label">INT</span><span class="value" id="monster-intelligence"></span></div>
+                <div class="stat-block-field"><span class="label">WIS</span><span class="value" id="monster-wisdom"></span></div>
+                <div class="stat-block-field"><span class="label">CHA</span><span class="value" id="monster-charisma"></span></div>
+            </div>
+
+            <h3 class="sub-title">Special Abilities</h3>
+            <ul class="stat-list" id="monster-abilities"></ul>
+
+            <h3 class="sub-title">Actions</h3>
+            <ul class="stat-list" id="monster-actions"></ul>
+        </section>
+
+        <section class="card" id="monster-create-section" hidden>
+            <h2 class="card-title bestiary-title">Create a Custom Monster</h2>
+            <p class="hint monster-create-lead">Draft your own creature on parchment-style notes, then add the core stats your table needs at a glance.</p>
+            <form id="monster-create-form">
+                <div class="monster-create-layout">
+                    <section class="monster-create-panel monster-create-panel-main">
+                        <h3 class="sub-title monster-create-panel-title">Identity</h3>
+                        <div class="monster-form-grid monster-form-grid-two">
+                            <div>
+                                <label for="m-name">Name</label>
+                                <input type="text" id="m-name" placeholder="Gloomfang Stalker" required>
+                            </div>
+                            <div>
+                                <label for="m-size">Size</label>
+                                <select id="m-size">
+                                    <option>Tiny</option><option>Small</option><option selected>Medium</option>
+                                    <option>Large</option><option>Huge</option><option>Gargantuan</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="m-type">Type</label>
+                                <input type="text" id="m-type" placeholder="beast, undead, fiend...">
+                            </div>
+                            <div>
+                                <label for="m-alignment">Alignment</label>
+                                <input type="text" id="m-alignment" placeholder="chaotic evil">
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="monster-create-panel monster-create-panel-main">
+                        <h3 class="sub-title monster-create-panel-title">Battle Notes</h3>
+                        <div class="monster-form-grid monster-form-grid-two">
+                            <div>
+                                <label for="m-ac">Armor Class</label>
+                                <input type="number" id="m-ac" placeholder="13">
+                            </div>
+                            <div>
+                                <label for="m-ac-desc">Armor Class Notes</label>
+                                <input type="text" id="m-ac-desc" placeholder="natural armor">
+                            </div>
+                            <div>
+                                <label for="m-hp">Hit Points</label>
+                                <input type="number" id="m-hp" placeholder="22">
+                            </div>
+                            <div>
+                                <label for="m-hit-dice">Hit Dice</label>
+                                <input type="text" id="m-hit-dice" placeholder="4d8+4">
+                            </div>
+                            <div class="monster-form-grid-span">
+                                <label for="m-speed">Speed</label>
+                                <input type="text" id="m-speed" placeholder="30 ft., climb 30 ft.">
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="monster-create-panel monster-create-panel-wide">
+                        <p class="card-title monster-form-section-title">Ability Scores</p>
+                        <div class="stat-block-grid monster-create-stats-grid">
+                            <label class="stat-block-field">STR <input type="number" id="m-str" placeholder="10"></label>
+                            <label class="stat-block-field">DEX <input type="number" id="m-dex" placeholder="10"></label>
+                            <label class="stat-block-field">CON <input type="number" id="m-con" placeholder="10"></label>
+                            <label class="stat-block-field">INT <input type="number" id="m-int" placeholder="10"></label>
+                            <label class="stat-block-field">WIS <input type="number" id="m-wis" placeholder="10"></label>
+                            <label class="stat-block-field">CHA <input type="number" id="m-cha" placeholder="10"></label>
+                        </div>
+                    </section>
+
+                    <section class="monster-create-panel monster-create-panel-wide">
+                        <div class="monster-form-grid monster-form-grid-two monster-form-grid-tight">
+                            <div>
+                                <label for="m-cr">Challenge Rating</label>
+                                <input type="text" id="m-cr" placeholder="1/2">
+                            </div>
+                        </div>
+
+                        <p class="card-title monster-form-section-title">Actions</p>
+                        <div id="actions-list"></div>
+                        <div class="button-row monster-create-actions-row">
+                            <button type="button" id="add-action-btn">+ Add Action</button>
+                        </div>
+
+                        <p class="hint" id="create-form-status" hidden></p>
+                        <div class="button-row monster-create-submit-row">
+                            <button type="submit" class="tool-btn tool-btn-accent">Save Monster</button>
+                        </div>
+                    </section>
+                </div>
+            </form>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2026 D&amp;D App. All rights reserved.</p>
+    </footer>
 </body>
 </html>

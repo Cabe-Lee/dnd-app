@@ -13,12 +13,20 @@ function normalize(str) {
 function setupTextDropdown({ inputEl, dropdownEl, hiddenUntilFirstUse = false, emptyLabel, items }) {
   let activeIndex = -1;
 
+  function positionDropdown() {
+    const rect = inputEl.getBoundingClientRect();
+    dropdownEl.style.left = `${rect.left + window.scrollX}px`;
+    dropdownEl.style.top = `${rect.bottom + window.scrollY + 4}px`;
+    dropdownEl.style.minWidth = `${rect.width}px`;
+  }
+
   function hide() {
     dropdownEl.hidden = true;
     dropdownEl.innerHTML = '';
   }
 
   function show(list) {
+    positionDropdown();
     dropdownEl.innerHTML = '';
     dropdownEl.hidden = false;
 
@@ -61,6 +69,7 @@ function setupTextDropdown({ inputEl, dropdownEl, hiddenUntilFirstUse = false, e
       : items.slice(0, 12);
 
     if (!list.length) {
+      positionDropdown();
       dropdownEl.innerHTML = `<div class="dropdown-item muted">${emptyLabel}</div>`;
       dropdownEl.hidden = false;
       return;
@@ -120,6 +129,14 @@ function setupTextDropdown({ inputEl, dropdownEl, hiddenUntilFirstUse = false, e
     const clickedInside = inputEl.contains(e.target) || dropdownEl.contains(e.target);
     if (!clickedInside) hide();
   });
+
+  window.addEventListener('resize', () => {
+    if (!dropdownEl.hidden) positionDropdown();
+  });
+
+  window.addEventListener('scroll', () => {
+    if (!dropdownEl.hidden) positionDropdown();
+  }, true);
 }
 
 async function fetchClasses() {

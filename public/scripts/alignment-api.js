@@ -1,5 +1,9 @@
+// Alignment API + dropdown setup using D&D 5e API (2014)
+
 function getBaseUrl() {
+  // Prefer Vite env; fall back to runtime window var; then default.
   try {
+    // eslint-disable-next-line no-undef
     return import.meta?.env?.EXTERNAL_API_BASE_URL || window?.EXTERNAL_API_BASE_URL || 'https://www.dnd5eapi.co/api';
   } catch {
     return window?.EXTERNAL_API_BASE_URL || 'https://www.dnd5eapi.co/api';
@@ -11,20 +15,30 @@ function normalize(str) {
 }
 
 async function fetchAlignments() {
+  // Per requirement, use the /2014 endpoint.
   const baseUrl = getBaseUrl();
   const res = await fetch(`${baseUrl}/2014/alignments`);
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   const data = (await res.json()) ?? {};
+  // D&D 5e API returns { results: [{ name, url }, ...] }
   return data.results ?? [];
 }
 
 export async function fetchAlignmentsAndSetupDropdown({ inputEl, dropdownEl, slugEl }) {
+  function positionDropdown() {
+    const rect = inputEl.getBoundingClientRect();
+    dropdownEl.style.left = `${rect.left + window.scrollX}px`;
+    dropdownEl.style.top = `${rect.bottom + window.scrollY + 4}px`;
+    dropdownEl.style.minWidth = `${rect.width}px`;
+  }
+
   function hide() {
     dropdownEl.hidden = true;
     dropdownEl.innerHTML = '';
   }
 
   function show(list) {
+    positionDropdown();
     dropdownEl.innerHTML = '';
     dropdownEl.hidden = false;
 
@@ -69,6 +83,7 @@ export async function fetchAlignmentsAndSetupDropdown({ inputEl, dropdownEl, slu
       : alignments.slice(0, 12);
 
     if (list.length === 0) {
+      positionDropdown();
       dropdownEl.innerHTML = '<div class="dropdown-item muted">No alignments found.</div>';
       dropdownEl.hidden = false;
       return;
@@ -78,6 +93,7 @@ export async function fetchAlignmentsAndSetupDropdown({ inputEl, dropdownEl, slu
   }
 
   inputEl.addEventListener('focus', () => {
+    // keep dropdown hidden until user interacts; focus counts as interaction.
     render();
   });
 
@@ -128,8 +144,18 @@ export async function fetchAlignmentsAndSetupDropdown({ inputEl, dropdownEl, slu
     if (!clickedInside) hide();
   });
 
+  window.addEventListener('resize', () => {
+    if (!dropdownEl.hidden) positionDropdown();
+  });
+
+  window.addEventListener('scroll', () => {
+    if (!dropdownEl.hidden) positionDropdown();
+  }, true);
+
+  // Initial data/state (keep dropdown hidden until interaction)
   const results = await fetchAlignments();
 
+  // D&D 5e API includes the 9 alignments; enforce the required display order.
   const order = [
     'lawful-good',
     'neutral-good',
@@ -153,4 +179,6 @@ export async function fetchAlignmentsAndSetupDropdown({ inputEl, dropdownEl, slu
 
   dropdownEl.innerHTML = '';
   slugEl.value = '';
+
+  // render will be triggered by focus/input
 }

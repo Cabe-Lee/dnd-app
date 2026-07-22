@@ -1,28 +1,131 @@
-#pc-info-form .level-picker {
-  display: flex;
+#level-input,
+#hit-dice-level-input,
+#pc-stats-form input[type="number"] {
+  max-width: 96px;
+}
+
+.arrow-input-row {
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
-  position: relative;
+  gap: .4rem;
 }
 
-#pc-info-form .level-picker input[type="number"] {
-  width: 60px;
+.arrow-input-row input[type="number"] {
+  width: 78px;
+  margin: 0;
 }
 
-#pc-info-form .level-picker button {
-  width: 26px;
-  height: 26px;
+.arrow-input-row-level input[type="number"] {
+  width: 58px;
+}
+
+.arrow-button-stack {
+  display: inline-flex;
+  flex-direction: row;
+  gap: .25rem;
+  align-items: center;
+}
+
+.arrow-button-stack-single {
+  justify-content: center;
+}
+
+.pc-validation-message {
+  margin: 12px 0;
+  font-weight: 600;
+  min-height: 1.5em;
+}
+
+#level-up,
+#level-down,
+#strength-down,
+#dexterity-up,
+#dexterity-down,
+#constitution-up,
+#constitution-down,
+#intelligence-up,
+#intelligence-down,
+#wisdom-up,
+#wisdom-down,
+#charisma-up {
+  width: 28px;
+  min-width: 28px;
+  height: 28px;
   padding: 0;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  background: #fff;
-  cursor: pointer;
+  border-radius: 7px;
+  border: 1px solid rgba(118, 92, 69, 0.82);
+  background: linear-gradient(180deg, rgba(54, 40, 29, 0.96), rgba(30, 22, 17, 0.96));
+  color: var(--parchment-soft);
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  vertical-align: middle;
+  font-size: 0.8rem;
   line-height: 1;
+  box-shadow: none;
 }
 
-#pc-info-form .level-picker button:hover {
-  background: #f2f2f2;
+#level-up:hover,
+#level-down:hover,
+#strength-down:hover,
+#dexterity-up:hover,
+#dexterity-down:hover,
+#constitution-up:hover,
+#constitution-down:hover,
+#intelligence-up:hover,
+#intelligence-down:hover,
+#wisdom-up:hover,
+#wisdom-down:hover,
+#charisma-up:hover {
+  background: linear-gradient(180deg, rgba(73, 53, 39, 0.98), rgba(41, 29, 22, 0.98));
+  transform: none;
 }
+
+#level-up:focus-visible,
+#level-down:focus-visible,
+#strength-down:focus-visible,
+#dexterity-up:focus-visible,
+#dexterity-down:focus-visible,
+#constitution-up:focus-visible,
+#constitution-down:focus-visible,
+#intelligence-up:focus-visible,
+#intelligence-down:focus-visible,
+#wisdom-up:focus-visible,
+#wisdom-down:focus-visible,
+#charisma-up:focus-visible {
+  outline-offset: 2px;
+}
+
+#pc-info-form .arrow-input-row button,
+#pc-stats-form .arrow-input-row button {
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .arrow-input-row {
+    gap: .35rem;
+  }
+
+  #level-up,
+  #level-down,
+  #strength-down,
+  #dexterity-up,
+  #dexterity-down,
+  #constitution-up,
+  #constitution-down,
+  #intelligence-up,
+  #intelligence-down,
+  #wisdom-up,
+  #wisdom-down,
+  #charisma-up {
+    width: 26px;
+    min-width: 26px;
+    height: 26px;
+  }
+
+  .arrow-input-row input[type="number"] {
+    width: 72px;
+  }
+}
+
+

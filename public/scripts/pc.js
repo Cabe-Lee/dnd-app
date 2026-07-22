@@ -17,7 +17,7 @@ function displayAbilityScores(scores) {
         const mod = abilityModifier(val);
 
         const div = document.createElement('div');
-        div.style.cssText = 'text-align: center; min-width: 70px;';
+        div.style.cssText = 'text-align: center; min-width: 96px;';
 
         const labelDiv = document.createElement('div');
         labelDiv.style.cssText = 'font-weight: 700; font-size: 0.85em; color: #aaa;';
@@ -26,7 +26,7 @@ function displayAbilityScores(scores) {
         const input = document.createElement('input');
         input.type = 'number';
         input.value = val;
-        input.style.cssText = 'font-size: 1.6em; font-weight: 700; width: 60px; text-align: center; background: #1e1e1e; color: #fff; border: 1px solid #555; border-radius: 4px;';
+        input.style.cssText = 'font-size: 1.6em; font-weight: 700; width: 84px; min-width: 84px; text-align: center; background: #1e1e1e; color: #fff; border: 1px solid #555; border-radius: 8px; padding: 4px 8px;';
         input.title = 'Type a number and press Enter to change the ability score.';
 
         (function setupInstruction() {
