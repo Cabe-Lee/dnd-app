@@ -1,0 +1,143 @@
+/* ==========================================================================
+   HOMEPAGE — hero banner, feature grid, and a small "Roll for Initiative"
+   flourish. Only used on index.html; reads the same theme variables
+   defined in main.css so it matches automatically.
+   ========================================================================== */
+
+.home-main {
+  display: grid;
+  align-content: start;
+  gap: clamp(1rem, 2.2vw, 1.65rem);
+}
+
+.hero {
+  text-align: center;
+  padding-block: clamp(1.5rem, 4vw, 3rem);
+}
+
+.hero-emblem {
+  inline-size: clamp(80px, 10vw, 120px);
+  margin-inline: auto;
+  display: block;
+  margin-block-end: 1rem;
+}
+
+.hero h2 {
+  font-size: clamp(1.8rem, 1.3rem + 2vw, 2.6rem);
+  margin: 0 0 .5rem;
+  background: linear-gradient(100deg, var(--ink), var(--parchment) 65%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero-tagline {
+  max-inline-size: 46ch;
+  margin-inline: auto;
+  color: var(--ink-soft);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.1rem;
+}
+
+.hero-actions {
+  display: flex;
+  justify-content: center;
+  gap: .75rem;
+  flex-wrap: wrap;
+  margin-block-start: 1.5rem;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: clamp(1rem, 2.3vw, 1.65rem);
+}
+
+.feature-card {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  gap: .5rem;
+  text-decoration: none;
+  color: var(--ink);
+  background: linear-gradient(180deg,
+    color-mix(in oklab, var(--panel) 88%, var(--parchment)) 0%,
+    var(--panel) 12%);
+  border: 1px solid var(--panel-edge);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: clamp(1.35rem, 3vw, 1.9rem) 1.1rem;
+  transition: transform .2s, border-color .2s;
+}
+
+.home-main > .card {
+  margin-block-end: 0;
+}
+
+.feature-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--parchment);
+}
+
+.feature-icon {
+  inline-size: 44px;
+  color: var(--parchment);
+}
+
+.feature-card h3 { margin: 0; color: var(--ink); font-size: 1.1rem; }
+.feature-card p { margin: 0; font-size: .85rem; color: var(--ink-soft); }
+
+.initiative-roll {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.roll-result-home {
+  min-inline-size: 84px;
+  min-block-size: 84px;
+  display: grid;
+  place-items: center;
+  background: var(--well);
+  border: 1px dashed var(--panel-edge);
+  border-radius: var(--radius);
+  padding: .5rem;
+}
+
+.roll-result-home .placeholder {
+  color: var(--ink-soft);
+  font-style: italic;
+  font-family: var(--font-display);
+}
+
+.home-roll-num {
+  font: 700 2.2rem var(--font-display);
+  color: var(--parchment);
+  animation: home-roll-pop .35s ease-out;
+}
+
+.home-roll-num.is-crit {
+  color: var(--crit);
+  text-shadow: 0 0 18px color-mix(in srgb, var(--crit) 55%, transparent);
+}
+
+.home-roll-num.is-fumble { color: var(--fumble); }
+
+@keyframes home-roll-pop {
+  0% { transform: scale(.6) rotate(-8deg); opacity: 0; }
+  100% { transform: scale(1) rotate(0); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-roll-num { animation: none; }
+}
+
+@media (max-width: 640px) {
+  .home-main {
+    gap: .95rem;
+  }
+
+  .initiative-roll { justify-content: center; }
+}

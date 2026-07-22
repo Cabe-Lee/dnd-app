@@ -25,12 +25,20 @@ async function fetchAlignments() {
 }
 
 export async function fetchAlignmentsAndSetupDropdown({ inputEl, dropdownEl, slugEl }) {
+  function positionDropdown() {
+    const rect = inputEl.getBoundingClientRect();
+    dropdownEl.style.left = `${rect.left + window.scrollX}px`;
+    dropdownEl.style.top = `${rect.bottom + window.scrollY + 4}px`;
+    dropdownEl.style.minWidth = `${rect.width}px`;
+  }
+
   function hide() {
     dropdownEl.hidden = true;
     dropdownEl.innerHTML = '';
   }
 
   function show(list) {
+    positionDropdown();
     dropdownEl.innerHTML = '';
     dropdownEl.hidden = false;
 
@@ -75,6 +83,7 @@ export async function fetchAlignmentsAndSetupDropdown({ inputEl, dropdownEl, slu
       : alignments.slice(0, 12);
 
     if (list.length === 0) {
+      positionDropdown();
       dropdownEl.innerHTML = '<div class="dropdown-item muted">No alignments found.</div>';
       dropdownEl.hidden = false;
       return;
@@ -135,6 +144,14 @@ export async function fetchAlignmentsAndSetupDropdown({ inputEl, dropdownEl, slu
     if (!clickedInside) hide();
   });
 
+  window.addEventListener('resize', () => {
+    if (!dropdownEl.hidden) positionDropdown();
+  });
+
+  window.addEventListener('scroll', () => {
+    if (!dropdownEl.hidden) positionDropdown();
+  }, true);
+
   // Initial data/state (keep dropdown hidden until interaction)
   const results = await fetchAlignments();
 
@@ -164,5 +181,5 @@ export async function fetchAlignmentsAndSetupDropdown({ inputEl, dropdownEl, slu
   slugEl.value = '';
 
   // render will be triggered by focus/input
-n}
+}
 

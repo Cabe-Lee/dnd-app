@@ -6,16 +6,61 @@
         <title>Player Characters</title>
         <script type="module" src="../scripts/characters.js"></script>
         <script type="module" src="../scripts/index.js"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="../styles/main.css">
     </head>
     <body>
-        <h1>Player Characters</h1>
-        <button><a href="character-creation.html">Create New Character</a></button>
-        <button id="delete-mode-btn">Delete Characters</button>
-        <div id="delete-confirmation" style="display: none; margin-top: 10px; background: #2a1a1a; border: 1px solid #c55; border-radius: 8px; padding: 16px; color: #ddd;">
-            <p style="margin: 0 0 12px 0; font-weight: 600; color: #e88;">Are you sure you want to delete <span id="delete-target-name" style="color: #fff;"></span>?</p>
-            <button id="confirm-delete-yes" style="background: #c55; color: #fff; border: none; border-radius: 4px; cursor: pointer; padding: 6px 16px; margin-right: 8px;">Yes</button>
-            <button id="confirm-delete-no" style="background: #444; color: #fff; border: 1px solid #555; border-radius: 4px; cursor: pointer; padding: 6px 16px;">No</button>
-        </div>
-        <div id="character-list" style="margin-top: 20px; display: flex; flex-direction: column; gap: 12px;"></div>
+        <header class="site-header">
+            <div class="header-inner">
+                <div class="brand">
+                    <svg viewBox="0 0 100 100" class="d20-emblem" aria-hidden="true">
+                        <polygon points="50,4 89,26 89,74 50,96 11,74 11,26" class="d20-outer"/>
+                        <polygon points="50,22 74,62 26,62" class="d20-face"/>
+                        <line x1="50" y1="4"  x2="50" y2="22"/>
+                        <line x1="89" y1="26" x2="74" y2="62"/>
+                        <line x1="11" y1="26" x2="26" y2="62"/>
+                        <line x1="89" y1="74" x2="74" y2="62"/>
+                        <line x1="11" y1="74" x2="26" y2="62"/>
+                        <line x1="50" y1="96" x2="74" y2="62"/>
+                        <line x1="50" y1="96" x2="26" y2="62"/>
+                        <text x="50" y="53" class="d20-num">20</text>
+                    </svg>
+                    <div class="brand-text">
+                        <p class="eyebrow">Campaign companion</p>
+                        <h1>D&amp;D App</h1>
+                    </div>
+                </div>
+                <nav aria-label="Main navigation">
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="dice-roller.html">Dice Roller</a></li>
+                        <li><a href="characters.html">Characters</a></li>
+                        <li><a href="monsters.html">Monsters</a></li>
+                        <li><a target="_blank" href="https://dnd5e.wikidot.com/">Rules (2014)</a></li>
+                    </ul>
+                </nav>
+                <a href="signup.html" class="tool-btn tool-btn-accent">Sign Up</a>
+            </div>
+        </header>
+        <main class="container">
+            <section class="card">
+                <h2 class="card-title">Player Characters</h2>
+                <div class="button-row">
+                    <a class="tool-btn tool-btn-accent" href="character-creation.html">Create New Character</a>
+                    <button id="delete-mode-btn">Delete Characters</button>
+                </div>
+                <div id="delete-confirmation" style="display: none; margin-top: 10px; background: #2a1a1a; border: 1px solid #c55; border-radius: 8px; padding: 16px; color: #ddd;">
+                    <p style="margin: 0 0 12px 0; font-weight: 600; color: #e88;">Are you sure you want to delete <span id="delete-target-name" style="color: #fff;"></span>?</p>
+                    <button id="confirm-delete-yes" style="background: #c55; color: #fff; border: none; border-radius: 4px; cursor: pointer; padding: 6px 16px; margin-right: 8px;">Yes</button>
+                    <button id="confirm-delete-no" style="background: #444; color: #fff; border: 1px solid #555; border-radius: 4px; cursor: pointer; padding: 6px 16px;">No</button>
+                </div>
+                <div id="character-list" style="margin-top: 20px; display: flex; flex-direction: column; gap: 12px;"></div>
+            </section>
+        </main>
+        <footer>
+            <p>&copy; 2026 D&amp;D App. All rights reserved.</p>
+        </footer>
     </body>
 </html>

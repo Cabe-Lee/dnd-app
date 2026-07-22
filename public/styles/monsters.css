@@ -1,0 +1,396 @@
+/* ==========================================================================
+   MONSTER THEME — a little creepier, without breaking from the site's
+   established look. Scoped to .monster-theme (used on monsters.html and
+   monster.html only) so the rest of the app is untouched. This file only
+   ADDS atmosphere on top of main.css's existing colors/cards/buttons —
+   it doesn't override --ink/--panel/--parchment, so everything still
+   matches the rest of the site.
+   ========================================================================== */
+
+:root {
+  --eerie: #7fae46;
+  --eerie-dim: #4c6b2b;
+  --danger: #b3372c;
+}
+
+.monster-theme {
+  position: relative;
+}
+
+.monster-theme::before {
+  content: "";
+  position: absolute;
+  inset: -2rem;
+  z-index: 0;
+  pointer-events: none;
+  opacity: .35;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+.monster-theme::after {
+  content: "";
+  position: absolute;
+  inset: -2rem;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 30%, transparent 45%, rgba(0, 0, 0, .35));
+}
+
+.monster-theme > * { position: relative; z-index: 1; }
+
+@keyframes eerie-flicker {
+  0%, 100% { opacity: 1; }
+  45% { opacity: .92; }
+  55% { opacity: 1; }
+  70% { opacity: .96; }
+}
+
+.monster-theme .card-title,
+.bestiary-title {
+  color: var(--eerie);
+  animation: eerie-flicker 6s ease-in-out infinite;
+}
+
+.monster-theme .card-title::after {
+  background: linear-gradient(90deg, var(--eerie-dim), transparent);
+}
+
+.bestiary-search {
+  display: flex;
+  gap: .6rem;
+  align-items: center;
+  margin-block-end: 1.25rem;
+}
+
+.bestiary-search input[type="search"] {
+  max-inline-size: none;
+  flex: 1;
+}
+
+.bestiary-search input[type="search"]:focus-visible {
+  border-color: var(--eerie);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--eerie) 25%, transparent);
+}
+
+.bestiary-status {
+  color: var(--ink-soft);
+  font-style: italic;
+  font-family: var(--font-display);
+  margin-block-end: 1rem;
+}
+
+.monster-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.monster-card {
+  display: grid;
+  gap: .5rem;
+  text-decoration: none;
+  color: var(--ink);
+  background: linear-gradient(180deg,
+    color-mix(in oklab, var(--panel) 88%, var(--parchment)) 0%,
+    var(--panel) 12%);
+  border: 1px solid var(--panel-edge);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: .9rem;
+  transition: transform .2s, border-color .2s, box-shadow .2s;
+}
+
+.monster-card:hover {
+  border-color: var(--eerie);
+  box-shadow: var(--shadow-strong), 0 0 14px color-mix(in srgb, var(--eerie) 28%, transparent);
+  transform: translateY(-2px);
+}
+
+.monster-card-thumb {
+  aspect-ratio: 1;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--well);
+  border: 1px solid var(--panel-edge);
+  display: grid;
+  place-items: center;
+}
+
+.monster-card-thumb img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  filter: saturate(.85) contrast(1.05);
+}
+
+.monster-card-placeholder {
+  font-size: 1.8rem;
+  color: var(--ink-soft);
+  opacity: .6;
+}
+
+.monster-card h3 { margin: 0; font-size: 1rem; }
+
+.monster-badge {
+  justify-self: start;
+  font-size: .68rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: .2rem .55rem;
+  border-radius: 999px;
+  border: 1px solid var(--panel-edge);
+  color: var(--ink-soft);
+}
+
+.monster-badge-custom {
+  color: var(--eerie);
+  border-color: var(--eerie-dim);
+}
+
+.stat-block-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: .75rem;
+  margin-block-end: 1rem;
+}
+
+.stat-block-field {
+  background: var(--well);
+  border: 1px solid var(--panel-edge);
+  border-radius: 8px;
+  padding: .5rem .7rem;
+}
+
+.stat-block-field input[type="number"],
+.stat-block-field input[type="text"] {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  margin-top: .45rem;
+}
+
+#monster-create-form .stat-block-field input[type="number"] {
+  text-align: center;
+  font-family: var(--font-num);
+  font-size: 1rem;
+  min-inline-size: 5ch;
+}
+
+.stat-block-field .label {
+  display: block;
+  font-size: .68rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-block-end: .15rem;
+}
+
+.stat-block-field .value {
+  font-family: var(--font-num);
+  font-size: 1rem;
+}
+
+.cr-badge {
+  display: inline-block;
+  padding: .2rem .6rem;
+  border-radius: 999px;
+  font-family: var(--font-num);
+  font-weight: 600;
+  border: 1px solid var(--panel-edge);
+}
+
+.cr-badge[data-tier="low"] { color: var(--eerie); border-color: var(--eerie-dim); }
+.cr-badge[data-tier="mid"] { color: var(--crit); border-color: var(--crit); }
+
+.cr-badge[data-tier="high"] {
+  color: var(--danger);
+  border-color: var(--danger);
+  animation: eerie-flicker 2.4s ease-in-out infinite;
+  box-shadow: 0 0 8px color-mix(in srgb, var(--danger) 34%, transparent);
+}
+
+.stat-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .6rem; }
+
+.stat-list-item {
+  background: var(--well);
+  border-inline-start: 3px solid var(--eerie-dim);
+  border-radius: 6px;
+  padding: .5rem .7rem;
+}
+
+.stat-list-item h4 { margin: 0 0 .2rem; font-size: .92rem; color: var(--eerie); }
+.stat-list-item p { margin: 0; font-size: .85rem; color: var(--ink-soft); }
+
+.monster-form-section-title {
+  font-size: 1rem;
+  margin-block-start: 1rem;
+}
+
+.monster-create-lead {
+  max-width: 62ch;
+  margin: -.15rem 0 1.25rem;
+  font-style: italic;
+}
+
+.monster-create-layout {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.monster-create-panel {
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(223, 200, 160, 0.11), rgba(71, 52, 36, 0.1)),
+    var(--well);
+  border: 1px solid rgba(184, 156, 113, 0.34);
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+}
+
+.monster-create-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(135deg, rgba(231, 210, 171, 0.08), transparent 45%);
+}
+
+.monster-create-panel > * {
+  position: relative;
+  z-index: 1;
+}
+
+.monster-create-panel-main {
+  min-height: 100%;
+}
+
+.monster-create-panel-wide {
+  grid-column: 1 / -1;
+}
+
+.monster-create-panel-title {
+  margin-top: 0;
+  color: var(--parchment-soft);
+}
+
+.monster-form-grid {
+  display: grid;
+  gap: .85rem 1rem;
+}
+
+.monster-form-grid-two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.monster-form-grid-tight {
+  gap: .65rem 1rem;
+}
+
+.monster-form-grid-span {
+  grid-column: 1 / -1;
+}
+
+.monster-create-stats-grid {
+  margin-block-end: 0;
+}
+
+.monster-create-actions-row {
+  margin-block: .75rem 0;
+}
+
+.monster-create-submit-row {
+  margin-block: 1rem 0;
+  justify-content: flex-end;
+}
+
+#monster-create-form > .button-row:last-child,
+#monster-create-form > .tool-btn:last-child {
+  margin-block-start: .75rem;
+}
+
+.monster-image-panel {
+  display: grid;
+  gap: .6rem;
+}
+
+.monster-image-frame {
+  aspect-ratio: 1;
+  max-inline-size: 320px;
+  border-radius: var(--radius);
+  border: 2px solid var(--panel-edge);
+	box-shadow: inset 0 0 28px rgba(0, 0, 0, .34), var(--shadow);
+  background: var(--well);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.monster-image-frame img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  filter: saturate(.8) contrast(1.1) brightness(.95);
+  animation: image-reveal .6s ease-out;
+}
+
+@keyframes image-reveal {
+  0% { opacity: 0; filter: saturate(.8) contrast(1.1) brightness(.6) blur(6px); }
+  100% { opacity: 1; filter: saturate(.8) contrast(1.1) brightness(.95) blur(0); }
+}
+
+.monster-image-frame .placeholder {
+  color: var(--ink-soft);
+  font-style: italic;
+  font-family: var(--font-display);
+  text-align: center;
+  padding: 1rem;
+}
+
+.action-row {
+  display: grid;
+  grid-template-columns: 1fr 2fr auto;
+  gap: .5rem;
+  align-items: start;
+  margin-block-end: .5rem;
+}
+
+.action-row textarea { resize: vertical; }
+
+.action-remove-btn {
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+.action-remove-btn:hover {
+  background: color-mix(in srgb, var(--danger) 12%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .monster-theme .card-title,
+  .bestiary-title,
+  .cr-badge[data-tier="high"],
+  .monster-image-frame img {
+    animation: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .monster-create-layout,
+  .monster-form-grid-two {
+    grid-template-columns: 1fr;
+  }
+
+  .monster-create-submit-row {
+    justify-content: stretch;
+  }
+
+  .monster-create-submit-row > * {
+    width: 100%;
+  }
+
+  .action-row { grid-template-columns: 1fr; }
+}

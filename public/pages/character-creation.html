@@ -14,11 +14,48 @@
         <script type="module" src="../scripts/background-skills-dropdown.js"></script>
         <script type="module" src="../scripts/character-creation-validation.js"></script>
 
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="../styles/main.css">
         <link rel="stylesheet" href="../styles/level-arrows.css" />
         <link rel="stylesheet" href="../styles/dropdown.css" />
     </head>
     <body>
-        <h1>Character Creation</h1>
+        <header class="site-header">
+            <div class="header-inner">
+                <div class="brand">
+                    <svg viewBox="0 0 100 100" class="d20-emblem" aria-hidden="true">
+                        <polygon points="50,4 89,26 89,74 50,96 11,74 11,26" class="d20-outer"/>
+                        <polygon points="50,22 74,62 26,62" class="d20-face"/>
+                        <line x1="50" y1="4"  x2="50" y2="22"/>
+                        <line x1="89" y1="26" x2="74" y2="62"/>
+                        <line x1="11" y1="26" x2="26" y2="62"/>
+                        <line x1="89" y1="74" x2="74" y2="62"/>
+                        <line x1="11" y1="74" x2="26" y2="62"/>
+                        <line x1="50" y1="96" x2="74" y2="62"/>
+                        <line x1="50" y1="96" x2="26" y2="62"/>
+                        <text x="50" y="53" class="d20-num">20</text>
+                    </svg>
+                    <div class="brand-text">
+                        <p class="eyebrow">Campaign companion</p>
+                        <h1>D&amp;D App</h1>
+                    </div>
+                </div>
+                <nav aria-label="Main navigation">
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="dice-roller.html">Dice Roller</a></li>
+                        <li><a href="characters.html">Characters</a></li>
+                        <li><a href="monsters.html">Monsters</a></li>
+                        <li><a target="_blank" rel="noopener" href="https://dnd5e.wikidot.com/">Rules (2014)</a></li>
+                    </ul>
+                </nav>
+                <a href="signup.html" class="tool-btn tool-btn-accent">Sign Up</a>
+            </div>
+        </header>
+        <main class="container">
+        <h2 class="card-title">Character Creation</h2>
         <div id="pc-form">
             <form id="pc-info-form">
                 <h3>Info</h3>
@@ -32,9 +69,13 @@
                 <div id="class-dropdown" class="dropdown" hidden></div>
                 <p></p>
                 <label for="level-input">Level</label>
-                <input type="number" id="level-input" placeholder="1" autocomplete="off" min="1" max="20" step="1" value="1" readonly>
-                <button type="button" id="level-up" aria-label="Increase level">▲</button>
-                <button type="button" id="level-down" aria-label="Decrease level">▼</button>
+                <div class="arrow-input-row arrow-input-row-level">
+                    <input type="number" id="level-input" placeholder="1" autocomplete="off" min="1" max="20" step="1" value="1" readonly>
+                    <div class="arrow-button-stack">
+                        <button type="button" id="level-up" aria-label="Increase level">▲</button>
+                        <button type="button" id="level-down" aria-label="Decrease level">▼</button>
+                    </div>
+                </div>
                 <p></p>
                 <label for="proficiency-bonus-input">Proficiency Bonus</label>
                 <input type="number" id="proficiency-bonus-input" placeholder="+1 testing" readonly>
@@ -91,32 +132,56 @@
                 <input type="button" id="reset-stats" name="ability-score-type" value="Custom Stats">
                 <h3>Ability Scores</h3>
                 <label for="strength-input">Strength</label>
-                <input type="number" id="strength-input" placeholder="8">
-                <button type="button" id="strength-down" aria-label="Strength down">▼</button>
+                <div class="arrow-input-row">
+                    <input type="number" id="strength-input" placeholder="8">
+                    <div class="arrow-button-stack arrow-button-stack-single">
+                        <button type="button" id="strength-down" aria-label="Strength down">▼</button>
+                    </div>
+                </div>
                 <p></p>
                 <label for="dexterity-input">Dexterity</label>
-                <input type="number" id="dexterity-input" placeholder="8">
-                <button type="button" id="dexterity-up" aria-label="Dexterity up">▲</button>
-                <button type="button" id="dexterity-down" aria-label="Dexterity down">▼</button>
+                <div class="arrow-input-row">
+                    <input type="number" id="dexterity-input" placeholder="8">
+                    <div class="arrow-button-stack">
+                        <button type="button" id="dexterity-up" aria-label="Dexterity up">▲</button>
+                        <button type="button" id="dexterity-down" aria-label="Dexterity down">▼</button>
+                    </div>
+                </div>
                 <p></p>
                 <label for="constitution-input">Constitution</label>
-                <input type="number" id="constitution-input" placeholder="8">
-                <button type="button" id="constitution-up" aria-label="Constitution up">▲</button> 
-                <button type="button" id="constitution-down" aria-label="Constitution down">▼</button>
+                <div class="arrow-input-row">
+                    <input type="number" id="constitution-input" placeholder="8">
+                    <div class="arrow-button-stack">
+                        <button type="button" id="constitution-up" aria-label="Constitution up">▲</button>
+                        <button type="button" id="constitution-down" aria-label="Constitution down">▼</button>
+                    </div>
+                </div>
                 <p></p>
                 <label for="intelligence-input">Intelligence</label>
-                <input type="number" id="intelligence-input" placeholder="8">
-                <button type="button" id="intelligence-up" aria-label="Intelligence up">▲</button>
-                <button type="button" id="intelligence-down" aria-label="Intelligence down">▼</button>
+                <div class="arrow-input-row">
+                    <input type="number" id="intelligence-input" placeholder="8">
+                    <div class="arrow-button-stack">
+                        <button type="button" id="intelligence-up" aria-label="Intelligence up">▲</button>
+                        <button type="button" id="intelligence-down" aria-label="Intelligence down">▼</button>
+                    </div>
+                </div>
                 <p></p>
                 <label for="wisdom-input">Wisdom</label>
-                <input type="number" id="wisdom-input" placeholder="8">
-                <button type="button" id="wisdom-up" aria-label="Wisdom up">▲</button>
-                <button type="button" id="wisdom-down" aria-label="Wisdom down">▼</button>
+                <div class="arrow-input-row">
+                    <input type="number" id="wisdom-input" placeholder="8">
+                    <div class="arrow-button-stack">
+                        <button type="button" id="wisdom-up" aria-label="Wisdom up">▲</button>
+                        <button type="button" id="wisdom-down" aria-label="Wisdom down">▼</button>
+                    </div>
+                </div>
                 <p></p>
                 <label for="charisma-input">Charisma</label>
-                <input type="number" id="charisma-input" placeholder="8">
-                <button type="button" id="charisma-up" aria-label="Charisma up">▲</button>
+                <div class="arrow-input-row">
+                    <input type="number" id="charisma-input" placeholder="8">
+                    <div class="arrow-button-stack arrow-button-stack-single">
+                        <button type="button" id="charisma-up" aria-label="Charisma up">▲</button>
+                    </div>
+                </div>
                 <p></p>
             </form>
             <form id="pc-saving-throws-form">
@@ -150,7 +215,7 @@
                 <p></p>
                 <label for="hit-dice-input">Hit Dice</label>
 
-                <input type="number" id="hit-dice-level-input" min="1" max="20" step="1" value="1" readonly>
+                <input type="number" id="hit-dice-level-input" min="1" max="20" step="1" value="1" readonly aria-label="Hit Dice Level">
 
                 <select id="hit-dice-input" name="hit-dice-input">
                     <option value="d4">d4</option>
@@ -249,8 +314,12 @@
                 <p></p>
             </form>
 
-            <div id="pc-validation-message" style="margin: 12px 0; font-weight: 600; min-height: 1.5em;"></div>
+            <div id="pc-validation-message" class="pc-validation-message"></div>
             <button id="pc-submit">Submit</button>
         </div>
+        </main>
+        <footer>
+            <p>&copy; 2026 D&amp;D App. All rights reserved.</p>
+        </footer>
     </body>
 </html>
