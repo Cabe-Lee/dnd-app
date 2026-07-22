@@ -10,7 +10,7 @@ function normalize(str) {
   return (str ?? '').toString().toLowerCase().trim();
 }
 
-function setupTextDropdown({ inputEl, dropdownEl, hiddenUntilFirstUse = false, emptyLabel, items }) {
+function setupTextDropdown({ inputEl, dropdownEl, slugEl, hiddenUntilFirstUse = false, emptyLabel, items }) {
   let activeIndex = -1;
 
   function positionDropdown() {
@@ -56,7 +56,7 @@ function setupTextDropdown({ inputEl, dropdownEl, hiddenUntilFirstUse = false, e
     const item = els[activeIndex];
     if (item?.dataset?.name !== undefined) {
       inputEl.value = item.dataset.name ?? '';
-      if (items.slugEl) items.slugEl.value = item.dataset.slug ?? '';
+      if (slugEl) slugEl.value = item.dataset.slug ?? '';
     }
   }
 
@@ -110,7 +110,7 @@ function setupTextDropdown({ inputEl, dropdownEl, hiddenUntilFirstUse = false, e
 
       const item = els[activeIndex];
       inputEl.value = item.dataset.name ?? '';
-      if (items.slugEl) items.slugEl.value = item.dataset.slug ?? '';
+      if (slugEl) slugEl.value = item.dataset.slug ?? '';
       hide();
     }
   });
@@ -121,7 +121,7 @@ function setupTextDropdown({ inputEl, dropdownEl, hiddenUntilFirstUse = false, e
 
     e.preventDefault();
     inputEl.value = item.dataset.name ?? '';
-    if (items.slugEl) items.slugEl.value = item.dataset.slug ?? '';
+    if (slugEl) slugEl.value = item.dataset.slug ?? '';
     hide();
   });
 
@@ -167,7 +167,10 @@ export async function fetchAndDisplayCharacters() {
       dropdownEl,
       hiddenUntilFirstUse: false,
       emptyLabel: 'No classes found.',
-      items: classes.map((c) => ({ name: c.name ?? '', slug: c.slug ?? '' })),
+      items: classes.map((c) => ({
+        name: c.name ?? '',
+        slug: (c.slug ?? '') || (c.url ? c.url.split('/').filter(Boolean).pop() : '')
+      })),
       slugEl
     });
   } catch (error) {
