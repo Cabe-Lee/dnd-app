@@ -114,83 +114,64 @@
 
         </div>
 
-    <!-- Equipment Side Menu -->
-    <div id="equipment-side-menu" style="position: fixed; top: 0; right: -350px; width: 320px; height: 100%; background: #1e1e1e; border-left: 2px solid #555; padding: 20px; z-index: 1000; transition: right 0.3s ease; overflow-y: auto; box-shadow: -4px 0 12px rgba(0,0,0,0.5);">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-            <h3 style="margin: 0; color: #fff;">Equipment</h3>
-            <button id="equipment-close-btn" style="background: none; color: #aaa; border: none; font-size: 1.5em; cursor: pointer;">&times;</button>
-        </div>
-        
-        <!-- Add Item Form (hidden by default, toggled by the toggle button) -->
-        <div id="equip-form-container" style="display: none; border: 1px solid #444; border-radius: 8px; padding: 12px; margin-bottom: 16px;">
-            <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
-                <input type="number" id="equip-qty" value="1" min="1" style="width: 50px; background: #2a2a2a; color: #fff; border: 1px solid #555; border-radius: 4px; padding: 4px 6px; font-size: 0.9em;">
-                <input type="text" id="equip-name" placeholder="Item name" style="flex: 1; background: #2a2a2a; color: #fff; border: 1px solid #555; border-radius: 4px; padding: 4px 6px; font-size: 0.9em;">
-            </div>
-            <select id="equip-type" style="width: 100%; background: #2a2a2a; color: #fff; border: 1px solid #555; border-radius: 4px; padding: 4px 6px; font-size: 0.9em; margin-bottom: 8px;">
-                <option value="adventuring gear">Adventuring Gear</option>
-                <option value="consumable">Consumable</option>
-                <option value="clothing">Clothing</option>
-                <option value="light armor">Light Armor</option>
-                <option value="medium armor">Medium Armor</option>
-                <option value="heavy armor">Heavy Armor</option>
-                <option value="simple melee weapon">Simple Melee Weapon</option>
-                <option value="martial melee weapon">Martial Melee Weapon</option>
-                <option value="simple ranged weapon">Simple Ranged Weapon</option>
-                <option value="martial ranged weapon">Martial Ranged Weapon</option>
-                <option value="ring">Ring</option>
-                <option value="ammunition">Ammunition</option>
-                <option value="arcane focus">Arcane Focus</option>
-                <option value="tool">Tool</option>
-                <option value="holy symbol">Holy Symbol</option>
-                <option value="material">Material</option>
-                <option value="gemstone">Gemstone</option>
-                <option value="poison">Poison</option>
-            </select>
-            <textarea id="equip-description" placeholder="Description..." style="width: 100%; background: #2a2a2a; color: #ccc; border: 1px solid #555; border-radius: 4px; padding: 4px 6px; font-size: 0.85em; resize: vertical; min-height: 40px; margin-bottom: 8px; box-sizing: border-box;"></textarea>
-            <div style="margin-bottom: 8px;">
-                <label style="color: #aaa; font-size: 0.9em;">
-                    <input type="checkbox" id="equip-magic"> Magic Item
-                </label>
-                <select id="equip-rarity" style="display: none; width: 100%; background: #2a2a2a; color: #fff; border: 1px solid #555; border-radius: 4px; padding: 4px 6px; font-size: 0.9em; margin-top: 4px;">
-                    <option value="common">Common</option>
-                    <option value="uncommon">Uncommon</option>
-                    <option value="rare">Rare</option>
-                    <option value="very rare">Very Rare</option>
-                    <option value="legendary">Legendary</option>
+            <div id="equip-form-container" class="pc-drawer-form">
+                <div class="pc-drawer-row">
+                    <input type="number" id="equip-qty" class="pc-qty-input" value="1" min="1" aria-label="Equipment Quantity">
+                    <input type="text" id="equip-name" placeholder="Item name">
+                </div>
+                <select id="equip-type" class="pc-stack-gap" aria-label="Equipment Type">
+                    <option value="adventuring gear">Adventuring Gear</option>
+                    <option value="consumable">Consumable</option>
+                    <option value="clothing">Clothing</option>
+                    <option value="light armor">Light Armor</option>
+                    <option value="medium armor">Medium Armor</option>
+                    <option value="heavy armor">Heavy Armor</option>
+                    <option value="simple melee weapon">Simple Melee Weapon</option>
+                    <option value="martial melee weapon">Martial Melee Weapon</option>
+                    <option value="simple ranged weapon">Simple Ranged Weapon</option>
+                    <option value="martial ranged weapon">Martial Ranged Weapon</option>
+                    <option value="ring">Ring</option>
+                    <option value="ammunition">Ammunition</option>
+                    <option value="arcane focus">Arcane Focus</option>
+                    <option value="tool">Tool</option>
+                    <option value="holy symbol">Holy Symbol</option>
+                    <option value="material">Material</option>
+                    <option value="gemstone">Gemstone</option>
+                    <option value="poison">Poison</option>
                 </select>
+                <textarea id="equip-description" class="pc-stack-gap" placeholder="Description..."></textarea>
+                <div class="pc-stack-gap">
+                    <label><input type="checkbox" id="equip-magic"> Magic Item</label>
+                    <select id="equip-rarity" class="pc-hidden-field pc-top-gap" aria-label="Equipment Rarity">
+                        <option value="common">Common</option>
+                        <option value="uncommon">Uncommon</option>
+                        <option value="rare">Rare</option>
+                        <option value="very rare">Very Rare</option>
+                        <option value="legendary">Legendary</option>
+                    </select>
+                </div>
+                <div class="pc-drawer-row">
+                    <input type="number" id="equip-money" class="pc-number-inline" value="0" min="0" aria-label="Equipment Cost Amount">
+                    <select id="equip-money-type" aria-label="Equipment Cost Currency">
+                        <option value="CP">CP</option>
+                        <option value="SP">SP</option>
+                        <option value="EP">EP</option>
+                        <option value="GP" selected>GP</option>
+                        <option value="PP">PP</option>
+                    </select>
+                </div>
+                <button id="equipment-add-btn" type="button">+ Add Item to Equipment</button>
             </div>
-            <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
-                <input type="number" id="equip-money" value="0" min="0" style="width: 70px; background: #2a2a2a; color: #fff; border: 1px solid #555; border-radius: 4px; padding: 4px 6px; font-size: 0.9em;">
-                <select id="equip-money-type" style="flex: 1; background: #2a2a2a; color: #fff; border: 1px solid #555; border-radius: 4px; padding: 4px 6px; font-size: 0.9em;">
-                    <option value="CP">CP</option>
-                    <option value="SP">SP</option>
-                    <option value="EP">EP</option>
-                    <option value="GP" selected>GP</option>
-                    <option value="PP">PP</option>
-                </select>
-            </div>
-            <button id="equipment-add-btn" style="width: 100%; background: #444; color: #fff; border: 1px solid #555; border-radius: 4px; cursor: pointer; padding: 6px 12px; font-size: 0.9em;">+ Add Item to Equipment</button>
-        </div>
-        <button id="equip-toggle-form-btn" style="width: 100%; background: #444; color: #fff; border: 1px solid #555; border-radius: 4px; cursor: pointer; padding: 6px 12px; font-size: 0.9em; margin-bottom: 12px;">+ Add Item</button>
+            <button id="equip-toggle-form-btn" type="button">+ Add Item</button>
+            <div id="equipment-list" class="pc-list"></div>
+        </aside>
 
-        <div id="equipment-list" style="display: flex; flex-direction: column; gap: 6px;"></div>
-    </div>
-    <!-- Overlay for side menus -->
-    <div id="equipment-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 999; display: none;"></div>
+        <div id="equipment-overlay" class="pc-overlay"></div>
 
-    <!-- Spells Side Menu -->
-    <div id="spells-side-menu" style="position: fixed; top: 0; right: -350px; width: 320px; height: 100%; background: #1e1e1e; border-left: 2px solid #555; padding: 20px; z-index: 1000; transition: right 0.3s ease; overflow-y: auto; box-shadow: -4px 0 12px rgba(0,0,0,0.5);">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-            <h3 style="margin: 0; color: #fff;">Spells</h3>
-            <button id="spells-close-btn" style="background: none; color: #aaa; border: none; font-size: 1.5em; cursor: pointer;">&times;</button>
-        </div>
-        
-        <!-- Add Spell Form (hidden by default, toggled by the toggle button) -->
-        <div id="spell-form-container" style="display: none; border: 1px solid #444; border-radius: 8px; padding: 12px; margin-bottom: 16px;">
-            <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
-                <input type="number" id="spell-level" value="1" min="0" max="9" style="width: 50px; background: #2a2a2a; color: #fff; border: 1px solid #555; border-radius: 4px; padding: 4px 6px; font-size: 0.9em;">
-                <input type="text" id="spell-name" placeholder="Spell name" style="flex: 1; background: #2a2a2a; color: #fff; border: 1px solid #555; border-radius: 4px; padding: 4px 6px; font-size: 0.9em;">
+        <aside id="spells-side-menu" class="pc-side-menu">
+            <div class="pc-side-menu-header">
+                <h3>Spells</h3>
+                <button id="spells-close-btn" class="pc-close-btn" type="button">&times;</button>
             </div>
 
             <div id="spell-form-container" class="pc-drawer-form">
