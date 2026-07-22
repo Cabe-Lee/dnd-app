@@ -7,7 +7,6 @@ function clampInt(value, min, max, fallback) {
 }
 
 function rollDie(sides) {
-  // returns integer in [1, sides]
   return Math.floor(Math.random() * sides) + 1;
 }
 
@@ -19,14 +18,9 @@ function initDiceRoller() {
   function renderDiceDropdown(filterText) {
     if (!dropdownEl) return;
 
-    // Position dropdown under the dice input.
     const rect = diceInput.getBoundingClientRect();
     dropdownEl.style.left = `${rect.left + window.scrollX}px`;
     dropdownEl.style.top = `${rect.bottom + window.scrollY}px`;
-
-
-    // If the user is typing something like `1d20`, allow matching by the entire text.
-    // We still store the selected textbox value as the plain dice sides (e.g., 20).
 
     const q = (filterText ?? '').toString().trim();
 
@@ -52,7 +46,6 @@ function initDiceRoller() {
       item.className = 'dropdown-item';
       item.textContent = opt.label;
       item.addEventListener('mousedown', (e) => {
-        // mousedown so it works before input blur
         e.preventDefault();
         diceInput.value = opt.sides;
         dropdownEl.hidden = true;
@@ -66,7 +59,6 @@ function initDiceRoller() {
   const rollBtn = document.getElementById('roll-button');
   const diceInput = document.getElementById('dice');
 
-  // Dropdown open/close + filtering
   diceInput.addEventListener('input', () => {
     renderDiceDropdown(diceInput.value);
   });
@@ -81,13 +73,11 @@ function initDiceRoller() {
     if (!clickedInside) dropdownEl.hidden = true;
   });
 
-
   const diceNumInput = document.getElementById('dice-num');
   const modifierInput = document.getElementById('modifier');
 
   if (!rollBtn || !diceInput || !diceNumInput || !modifierInput) return;
 
-  // Create/ensure a centered result element.
   let resultEl = document.getElementById('dice-result');
   if (!resultEl) {
     resultEl = document.createElement('div');
@@ -108,8 +98,6 @@ function initDiceRoller() {
   }
 
   const roll = () => {
-    // dice-num controls how many dice; dice controls how many sides.
-    // modifier is added/subtracted after rolling.
     const count = clampInt(diceNumInput.value, 1, 100, 1);
     const sides = clampInt(diceInput.value, 2, 10000, 20);
     const modifier = Number.parseInt(modifierInput.value, 10);
@@ -121,7 +109,6 @@ function initDiceRoller() {
 
     const modifierText = mod === 0 ? '' : ` ${mod > 0 ? '+' : '-'} ${Math.abs(mod)}`;
 
-    // Always new result each click.
     if (count === 1) {
       resultEl.textContent = `Result: ${results[0]}${modifierText}. Final Total: ${finalTotal}`;
     } else {
@@ -131,7 +118,6 @@ function initDiceRoller() {
 
   rollBtn.addEventListener('click', roll);
 
-  // Hitting Enter (while focus is inside the dice roller) triggers a roll.
   document.getElementById('dice-roller').addEventListener('keydown', (e) => {
     if (e.key !== 'Enter') return;
     e.preventDefault();
@@ -141,4 +127,3 @@ function initDiceRoller() {
 
 
 initDiceRoller();
-
