@@ -1,6 +1,3 @@
-// Background skill dropdowns for character-creation.html.
-// Uses existing dropdown styling/classes and the shared dropdown setup pattern.
-
 const skillItems = [
   { name: 'Acrobatics', slug: 'acrobatics' },
   { name: 'Animal Handling', slug: 'animal_handling' },
@@ -126,7 +123,6 @@ function setSkillCheckboxesFromText(selectedSkillName) {
 
   const normalized = normalize(selectedSkillName);
 
-  // Map dropdown skill names to the existing checkbox ids on the sheet.
   const skillNameToCheckboxId = {
     'acrobatics': 'acrobatics-input',
     'animal handling': 'animal-handling-input',
@@ -148,7 +144,6 @@ function setSkillCheckboxesFromText(selectedSkillName) {
     'survival': 'survival-input'
   };
 
-  // Remove parenthetical extras if the user types them (e.g., "Acrobatics (DEX)").
   const cleaned = normalized
     .replace(/\(.*?\)/g, '')
     .replace(/\s+/g, ' ')
@@ -173,7 +168,6 @@ function init() {
   const attachSync = (inputEl) => {
     if (!inputEl) return;
     inputEl.addEventListener('input', () => {
-      // Only turn on when it matches; do not try to turn off when cleared.
       setSkillCheckboxesFromText(inputEl.value);
     });
     inputEl.addEventListener('change', () => {
@@ -193,5 +187,3 @@ function init() {
 }
 
 init();
-
-

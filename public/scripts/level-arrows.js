@@ -24,7 +24,6 @@ function initLevelArrows() {
   const proficiencyEl = document.getElementById('proficiency-bonus-input');
   if (!inputEl || !upBtn || !downBtn || !proficiencyEl) return;
 
-
   const MIN = 1;
   const MAX = 20;
 
@@ -32,14 +31,10 @@ function initLevelArrows() {
     const currentRaw = inputEl.value;
     const current = currentRaw === '' ? MIN : clampInt(currentRaw, MIN, MAX, MIN);
     const pb = getProficiencyBonus(current);
-    // Display as +2, +3, etc.
     proficiencyEl.value = String(pb);
-
   }
 
-
   function bump(delta) {
-
     const currentRaw = inputEl.value;
     const current = currentRaw === '' ? MIN : clampInt(currentRaw, MIN, MAX, MIN);
     const next = clampInt(current + delta, MIN, MAX, MIN);
@@ -50,13 +45,9 @@ function initLevelArrows() {
   upBtn.addEventListener('click', () => bump(1));
   downBtn.addEventListener('click', () => bump(-1));
 
-  // Update proficiency whenever level changes (including programmatic updates).
   inputEl.addEventListener('input', syncProficiency);
 
-  // Initial render.
   syncProficiency();
 }
 
 initLevelArrows();
-
-

@@ -5,12 +5,10 @@
   position: relative;
 }
 
-/* Match dice-roller input spacing */
 #pc-info-form .level-picker input[type="number"] {
   width: 60px;
 }
 
-/* Arrow buttons look like dropdown items/buttons */
 #pc-info-form .level-picker button {
   width: 26px;
   height: 26px;
@@ -28,5 +26,3 @@
 #pc-info-form .level-picker button:hover {
   background: #f2f2f2;
 }
-
-

@@ -13,13 +13,11 @@ async function loadCharacters() {
             return;
         }
         container.innerHTML = '';
-        // Sort by id descending so newest characters (highest id) appear on top.
         characters.sort((a, b) => (b.id || 0) - (a.id || 0));
         characters.forEach(c => {
             const cardWrapper = document.createElement('div');
             cardWrapper.style.cssText = 'display: flex; align-items: center; gap: 8px;';
 
-            // Delete X button (only visible in delete mode)
             const deleteXBtn = document.createElement('button');
             deleteXBtn.textContent = '✕';
             deleteXBtn.style.cssText = 'background: #c55; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 1em; padding: 8px 10px; display: none; font-weight: 700;';
@@ -66,7 +64,6 @@ function renderDeleteMode() {
         deleteBtn.textContent = 'Delete Characters';
         deleteBtn.style.background = '';
         xButtons.forEach(btn => btn.style.display = 'none');
-        // Hide confirmation if visible
         const confirmDiv = document.getElementById('delete-confirmation');
         if (confirmDiv) confirmDiv.style.display = 'none';
         pendingDeleteId = null;
@@ -83,9 +80,7 @@ async function confirmDelete() {
         pendingDeleteId = null;
         const confirmDiv = document.getElementById('delete-confirmation');
         if (confirmDiv) confirmDiv.style.display = 'none';
-        // Reload the character list
         await loadCharacters();
-        // Re-apply delete mode state to the newly rendered cards
         renderDeleteMode();
     } catch (err) {
         console.error('Failed to delete character:', err);
@@ -98,7 +93,6 @@ function cancelDelete() {
     if (confirmDiv) confirmDiv.style.display = 'none';
 }
 
-// Wire up events on DOM ready
 document.addEventListener('DOMContentLoaded', () => {
     const deleteBtn = document.getElementById('delete-mode-btn');
     if (deleteBtn) {
@@ -120,4 +114,3 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 loadCharacters();
-

@@ -1,5 +1,3 @@
-// Alignment dropdown logic for character-creation.html
-
 import { fetchAlignmentsAndSetupDropdown } from './alignment-api.js';
 
 function initAlignmentDropdown() {
@@ -9,7 +7,6 @@ function initAlignmentDropdown() {
 
   if (!inputEl || !dropdownEl || !slugEl) return;
 
-  // If the API fails, keep the dropdown hidden (no error message in UI).
   fetchAlignmentsAndSetupDropdown({ inputEl, dropdownEl, slugEl }).catch(() => {
     dropdownEl.hidden = true;
     dropdownEl.innerHTML = '';

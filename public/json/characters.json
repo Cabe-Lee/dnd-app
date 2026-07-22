@@ -110,16 +110,6 @@
     "equipment": [
       {
         "quantity": 1,
-        "name": "Bob",
-        "type": "adventuring gear",
-        "description": "",
-        "isMagicItem": false,
-        "rarity": "",
-        "moneyValue": 0,
-        "moneyType": "GP"
-      },
-      {
-        "quantity": 1,
         "name": "Cloak",
         "type": "clothing",
         "description": "",
@@ -135,6 +125,13 @@
     "bonds": "",
     "flaws": "",
     "id": 5,
-    "hitDiceRemaining": 1
+    "hitDiceRemaining": 1,
+    "abilities": [
+      {
+        "type": "Feat",
+        "name": "Lucky",
+        "description": ""
+      }
+    ]
   }
 ]

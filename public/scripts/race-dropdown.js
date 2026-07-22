@@ -9,7 +9,6 @@ function initRaceDropdown() {
 
   if (!inputEl || !dropdownEl || !slugEl) return;
 
-  // Back-compat: allow page to load even if the API call fails.
   fetchRacesAndSetupDropdown({ inputEl, dropdownEl, slugEl }).catch(() => {
     dropdownEl.hidden = false;
     dropdownEl.innerHTML = '<div class="dropdown-item muted">Failed to load races.</div>';
@@ -17,4 +16,3 @@ function initRaceDropdown() {
 }
 
 initRaceDropdown();
-

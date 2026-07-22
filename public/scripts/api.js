@@ -1,9 +1,5 @@
-// Shared dropdown logic + external API helpers
-
 function getBaseUrl() {
-  // Prefer Vite env; fall back to runtime window var; then default.
   try {
-    // eslint-disable-next-line no-undef
     return import.meta?.env?.EXTERNAL_API_BASE_URL || window?.EXTERNAL_API_BASE_URL || 'https://www.dnd5eapi.co/api';
   } catch {
     return window?.EXTERNAL_API_BASE_URL || 'https://www.dnd5eapi.co/api';
@@ -126,7 +122,6 @@ function setupTextDropdown({ inputEl, dropdownEl, hiddenUntilFirstUse = false, e
   });
 }
 
-// Fetch classes from /classes
 async function fetchClasses() {
   const baseUrl = getBaseUrl();
   const res = await fetch(`${baseUrl}/classes`);
@@ -135,7 +130,6 @@ async function fetchClasses() {
   return data.results ?? [];
 }
 
-// Display the /classes data in the class dropdown on character-creation.html.
 export async function fetchAndDisplayCharacters() {
   const inputEl = document.getElementById('class-input');
   const dropdownEl = document.getElementById('class-dropdown');
@@ -165,5 +159,3 @@ export async function fetchAndDisplayCharacters() {
     dropdownEl.innerHTML = '<div class="dropdown-item muted">Failed to load classes.</div>';
   }
 }
-
-

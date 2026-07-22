@@ -1,6 +1,3 @@
-
-
-/* Dropdown used by dice-roller */
 #dice-dropdown.dropdown{
   position:absolute;
   background:#fff;
@@ -20,7 +17,6 @@
   background:#f2f2f2;
 }
 
-/* Dropdown used by character class picker */
 #class-dropdown.dropdown{
   position:absolute;
   background:#fff;
@@ -45,5 +41,3 @@
   cursor:default;
   opacity:0.75;
 }
-
-

@@ -29,7 +29,6 @@ function displayAbilityScores(scores) {
         input.style.cssText = 'font-size: 1.6em; font-weight: 700; width: 60px; text-align: center; background: #1e1e1e; color: #fff; border: 1px solid #555; border-radius: 4px;';
         input.title = 'Type a number and press Enter to change the ability score.';
 
-        // Show instruction message on focus, hide on blur — every time the user interacts.
         (function setupInstruction() {
             const instructionId = 'pc-ability-instruction';
             let instructionEl = document.getElementById(instructionId);
@@ -55,21 +54,17 @@ function displayAbilityScores(scores) {
         modSpan.style.cssText = `color: ${mod >= 0 ? '#5a5' : '#c55'};`;
         modSpan.textContent = `${mod >= 0 ? '+' : ''}${mod}`;
 
-        // On Enter: if the number changed, save to JSON and update the display in-place.
         input.addEventListener('keydown', async function onEnter(e) {
             if (e.key === 'Enter') {
                 const raw = input.value;
                 const parsed = raw === '' ? 0 : Number.parseInt(raw, 10);
                 const newVal = Number.isNaN(parsed) ? 0 : parsed;
-                // Only save and update if the value actually changed
                 if (newVal !== (currentAbilityScores?.[key] ?? 0)) {
                     currentAbilityScores[key] = newVal;
                     await saveField('abilityScores', { ...currentAbilityScores });
-                    // Update modifier span
                     const newMod = abilityModifier(newVal);
                     modSpan.textContent = `${newMod >= 0 ? '+' : ''}${newMod}`;
                     modSpan.style.color = newMod >= 0 ? '#5a5' : '#c55';
-                    // Re-render saving throws and skills with the new ability scores
                     const profBonus = Number(document.getElementById('pc-prof-bonus').textContent) || 0;
                     const currentSavingThrows = {};
                     document.querySelectorAll('#pc-saving-throws input[type="checkbox"]').forEach(function (cb) {
@@ -94,7 +89,6 @@ function displayAbilityScores(scores) {
                 }
             }
         });
-
         div.appendChild(labelDiv);
         div.appendChild(input);
         div.appendChild(modSpan);
@@ -179,7 +173,6 @@ function displaySkillsWithModifiers(skills, abilityScores, proficiencyBonus) {
         const rollResultSpan = document.createElement('span');
         rollResultSpan.style.cssText = 'font-size: 0.85em; color: #e0b040; min-width: 80px;';
 
-        // Roll d20 + modifier on label click — keep last 2 results visible
         const rollHistory = [];
         labelSpan.addEventListener('click', () => {
             const d20 = rollD20();
@@ -187,13 +180,11 @@ function displaySkillsWithModifiers(skills, abilityScores, proficiencyBonus) {
             const sign = total >= 0 ? '+' : '';
             const resultText = `🎲 ${resultVal} (${d20} ${sign}${total})`;
             rollHistory.push(resultText);
-            // Keep only the last 2 results
             while (rollHistory.length > 2) {
                 rollHistory.shift();
             }
             rollResultSpan.textContent = rollHistory.join('  |  ');
         });
-
         div.appendChild(checkbox);
         div.appendChild(totalSpan);
         div.appendChild(labelSpan);
@@ -243,7 +234,6 @@ function displaySavingThrowsWithModifiers(savingThrows, abilityScores, proficien
         const rollResultSpan = document.createElement('span');
         rollResultSpan.style.cssText = 'font-size: 0.85em; color: #e0b040; min-width: 80px;';
 
-        // Roll d20 + modifier on label click — keep last 2 results visible
         const rollHistory = [];
         labelSpan.addEventListener('click', () => {
             const d20 = rollD20();
@@ -251,13 +241,11 @@ function displaySavingThrowsWithModifiers(savingThrows, abilityScores, proficien
             const sign = total >= 0 ? '+' : '';
             const resultText = `🎲 ${resultVal} (${d20} ${sign}${total})`;
             rollHistory.push(resultText);
-            // Keep only the last 2 results
             while (rollHistory.length > 2) {
                 rollHistory.shift();
             }
             rollResultSpan.textContent = rollHistory.join('  |  ');
         });
-
         div.appendChild(checkbox);
         div.appendChild(totalSpan);
         div.appendChild(labelSpan);
@@ -288,7 +276,6 @@ function setupEditableTextField(inputId, jsonField) {
     const instructionEl = document.getElementById('pc-text-input-instruction');
     if (!instructionEl) return;
 
-    // Show instruction on focus, hide on blur
     input.addEventListener('focus', function showTip() {
         instructionEl.style.display = 'block';
     });
@@ -296,11 +283,9 @@ function setupEditableTextField(inputId, jsonField) {
         instructionEl.style.display = 'none';
     });
 
-    // On Enter: save the value if it changed
     input.addEventListener('keydown', async function onEnter(e) {
         if (e.key === 'Enter') {
             const newVal = input.value.trim();
-            // Only save if the value actually changed — we fetch current from attribute
             const currentVal = input.getAttribute('data-saved-value') || '';
             if (newVal !== currentVal) {
                 input.setAttribute('data-saved-value', newVal);
@@ -335,7 +320,6 @@ async function loadCharacter() {
         document.getElementById('pc-loading').style.display = 'none';
         document.getElementById('pc-content').style.display = 'block';
 
-        // Set editable text inputs for name, race, and class
         const nameInput = document.getElementById('pc-name');
         if (nameInput) {
             nameInput.value = c.name || '';
@@ -354,7 +338,6 @@ async function loadCharacter() {
             classInput.setAttribute('data-saved-value', c.class || '');
         }
 
-        // Set up level input with up/down arrows (range 1-20)
         const levelInput = document.getElementById('pc-level');
         const levelUpBtn = document.getElementById('pc-level-up');
         const levelDownBtn = document.getElementById('pc-level-down');
@@ -379,7 +362,6 @@ async function loadCharacter() {
             const raw = levelInput.value;
             const level = clampLevel(raw);
             levelInput.value = String(level);
-            // Update proficiency bonus display
             const pb = getProficiencyBonus(level);
             profBonusSpan.textContent = `${pb >= 0 ? '+' : ''}${pb}`;
         }
@@ -401,10 +383,8 @@ async function loadCharacter() {
             levelInput.value = String(initialLevel);
             levelInput.setAttribute('data-saved-value', String(initialLevel));
             
-            // Sync proficiency bonus display on load
             setTimeout(syncLevel, 0);
             
-            // Arrow button handlers
             if (levelUpBtn) {
                 levelUpBtn.addEventListener('click', () => {
                     const current = clampLevel(levelInput.value);
@@ -424,7 +404,6 @@ async function loadCharacter() {
                 });
             }
             
-            // Enter saves the level
             levelInput.addEventListener('keydown', async (e) => {
                 if (e.key === 'Enter') {
                     saveLevel();
@@ -432,7 +411,6 @@ async function loadCharacter() {
             });
         }
 
-// Set editable number inputs for hit points (max) and armor class
         const hpInput = document.getElementById('pc-hp');
         if (hpInput) {
             hpInput.value = c.hitPoints ?? '';
@@ -489,7 +467,6 @@ async function loadCharacter() {
 
 document.getElementById('pc-alignment').textContent = c.alignment || '';
 
-        // Display ability scores, saving throws, and skills
         if (c.abilityScores) {
             displayAbilityScores(c.abilityScores);
         }
@@ -501,7 +478,6 @@ document.getElementById('pc-alignment').textContent = c.alignment || '';
             displaySkillsWithModifiers(c.skills, c.abilityScores, profBonusVal);
         }
 
-        // Roll Initiative button with Dexterity modifier
         const initiativeBtn = document.getElementById('roll-initiative');
         const initiativeResultEl = document.getElementById('initiative-result');
         const initiativeHistory = [];
@@ -514,15 +490,14 @@ document.getElementById('pc-alignment').textContent = c.alignment || '';
                 const sign = dexMod >= 0 ? '+' : '';
                 const resultText = `🎲 Initiative: ${total} (${d20} ${sign}${dexMod})`;
                 initiativeHistory.push(resultText);
-                // Keep last 3 rolls
-                while (initiativeHistory.length > 3) {
+                // Keep last 2 rolls
+                while (initiativeHistory.length > 2) {
                     initiativeHistory.shift();
                 }
                 initiativeResultEl.innerHTML = initiativeHistory.join('<br>');
             });
         }
 
-        // Hit Dice tracking: display as "remaining / max" based on level; click to roll
         const hitDiceEl = document.getElementById('pc-hit-dice');
         const hitDiceResultEl = document.getElementById('pc-hit-dice-result');
         const hitDiceStr = c.hitDice || 'd6';
@@ -570,7 +545,6 @@ document.getElementById('pc-alignment').textContent = c.alignment || '';
             await saveField('hitDiceRemaining', remainingHitDice);
         });
 
-        // Long Rest
         const longRestBtn = document.getElementById('long-rest');
         const longRestResultEl = document.getElementById('pc-long-rest-result');
         if (longRestBtn) {
@@ -605,7 +579,6 @@ document.getElementById('pc-alignment').textContent = c.alignment || '';
         document.getElementById('pc-bonds').textContent = c.bonds || '-';
         document.getElementById('pc-flaws').textContent = c.flaws || '-';
 
-        // Hit Points Left
         const hpLeftInput = document.getElementById('pc-hp-left');
         const savedHpLeft = c.hitPointsLeft;
         hpLeftInput.value = savedHpLeft !== undefined && savedHpLeft !== null ? savedHpLeft : (c.hitPoints ?? '');
@@ -615,12 +588,10 @@ document.getElementById('pc-alignment').textContent = c.alignment || '';
             saveField('hitPointsLeft', val);
         });
 
-        // Setup editable text fields
         setupEditableTextField('pc-name', 'name');
         setupEditableTextField('pc-race', 'race');
         setupEditableTextField('pc-class', 'class');
 
-        // Migrate old string-based equipment to structured objects
         function migrateEquipment(items) {
             if (!items || items.length === 0) return [];
             if (typeof items[0] === 'string') {
@@ -649,7 +620,6 @@ document.getElementById('pc-alignment').textContent = c.alignment || '';
 
         c.equipment = migrateEquipment(c.equipment);
 
-        // Equipment side menu
         const equipmentBtn = document.getElementById('equipment');
         const equipmentMenu = document.getElementById('equipment-side-menu');
         const equipmentOverlay = document.getElementById('equipment-overlay');
@@ -657,7 +627,6 @@ document.getElementById('pc-alignment').textContent = c.alignment || '';
         const equipmentAddBtn = document.getElementById('equipment-add-btn');
         const equipmentListEl = document.getElementById('equipment-list');
 
-        // Magic item checkbox toggles rarity dropdown
         const magicCheckbox = document.getElementById('equip-magic');
         const raritySelect = document.getElementById('equip-rarity');
         if (magicCheckbox && raritySelect) {
@@ -776,7 +745,6 @@ document.getElementById('pc-alignment').textContent = c.alignment || '';
             if (equipmentOverlay) equipmentOverlay.style.display = 'none';
         }
 
-        // Equipment button toggles the side menu
         if (equipmentBtn) {
             equipmentBtn.addEventListener('click', () => {
                 const isOpen = equipmentMenu && equipmentMenu.style.right === '0px';
@@ -789,12 +757,10 @@ document.getElementById('pc-alignment').textContent = c.alignment || '';
             });
         }
 
-        // Close button
         if (equipmentCloseBtn) {
             equipmentCloseBtn.addEventListener('click', closeEquipmentMenu);
         }
 
-        // Toggle equipment form show/hide with button text change
         const equipToggleBtn = document.getElementById('equip-toggle-form-btn');
         if (equipToggleBtn) {
             equipToggleBtn.addEventListener('click', () => {
@@ -811,7 +777,6 @@ document.getElementById('pc-alignment').textContent = c.alignment || '';
             });
         }
 
-        // Add item button - bind the click event
         if (equipmentAddBtn) {
             equipmentAddBtn.addEventListener('click', addEquipmentItem);
         }
@@ -850,7 +815,6 @@ document.getElementById('pc-alignment').textContent = c.alignment || '';
             refreshEquipmentList(updatedEquipment);
             updateEquipmentDisplay(updatedEquipment);
 
-            // Clear form fields
             if (qtyEl) qtyEl.value = '1';
             if (nameEl) nameEl.value = '';
             if (typeEl) typeEl.value = 'adventuring gear';
@@ -863,14 +827,12 @@ document.getElementById('pc-alignment').textContent = c.alignment || '';
             if (moneyEl) moneyEl.value = '0';
             if (moneyTypeEl) moneyTypeEl.value = 'GP';
 
-            // Hide the form and reset the toggle button text
             const formContainer = document.getElementById('equip-form-container');
             const equipToggleBtn = document.getElementById('equip-toggle-form-btn');
             if (formContainer) formContainer.style.display = 'none';
             if (equipToggleBtn) equipToggleBtn.textContent = '+ Add Item';
         }
 
-        // ---------- SPELLS MENU ----------
         const spellsBtn = document.getElementById('spells');
         const spellsMenu = document.getElementById('spells-side-menu');
         const spellsCloseBtn = document.getElementById('spells-close-btn');
@@ -1021,7 +983,6 @@ document.getElementById('pc-alignment').textContent = c.alignment || '';
             });
         }
 
-        // Range type toggle: show/hide distance number + ft
         const rangeTypeEl = document.getElementById('spell-range-type');
         const rangeDistanceEl = document.getElementById('spell-range-distance');
         if (rangeTypeEl && rangeDistanceEl) {
@@ -1033,11 +994,9 @@ document.getElementById('pc-alignment').textContent = c.alignment || '';
                 }
             }
             rangeTypeEl.addEventListener('change', updateRangeVisibility);
-            // Run on initial load
             updateRangeVisibility();
         }
 
-        // Material checkbox shows/hides material description input
         const compMCheckbox = document.getElementById('spell-comp-m');
         const materialDescEl = document.getElementById('spell-material-desc');
         if (compMCheckbox && materialDescEl) {
@@ -1046,34 +1005,26 @@ document.getElementById('pc-alignment').textContent = c.alignment || '';
             });
         }
 
-        // Concentration checkbox hides/shows "instantaneous" in duration dropdown
         const concCheckbox = document.getElementById('spell-concentration');
         const durationTypeEl = document.getElementById('spell-duration-type');
         const durationValueEl = document.getElementById('spell-duration-value');
         if (concCheckbox && durationTypeEl) {
             function updateDurationOptions() {
-                // Find the instantaneous option
                 const instantOption = durationTypeEl.querySelector('option[value="instantaneous"]');
                 if (concCheckbox.checked) {
-                    // Hide instantaneous when concentration is checked
                     if (instantOption) instantOption.style.display = 'none';
-                    // If instantaneous was selected, switch to "minute"
                     if (durationTypeEl.value === 'instantaneous') {
                         durationTypeEl.value = 'minute';
                     }
                 } else {
-                    // Show instantaneous when concentration is unchecked
                     if (instantOption) instantOption.style.display = 'block';
                 }
-                // Update duration value visibility
                 updateDurationValueVisibility();
             }
             concCheckbox.addEventListener('change', updateDurationOptions);
-            // Run on initial load
             updateDurationOptions();
         }
 
-        // Duration type change: hide number box for instantaneous, show for others
         function updateDurationValueVisibility() {
             if (durationTypeEl && durationValueEl) {
                 if (durationTypeEl.value === 'instantaneous') {
@@ -1085,11 +1036,9 @@ document.getElementById('pc-alignment').textContent = c.alignment || '';
         }
         if (durationTypeEl) {
             durationTypeEl.addEventListener('change', updateDurationValueVisibility);
-            // Run on initial load
             updateDurationValueVisibility();
         }
 
-        // Add spell button
         if (spellsAddBtn) {
             spellsAddBtn.addEventListener('click', async function addSpell() {
                 const nameEl = document.getElementById('spell-name');
@@ -1114,7 +1063,6 @@ document.getElementById('pc-alignment').textContent = c.alignment || '';
                     return;
                 }
 
-                // Build range string: if touch, save "Touch"; if distance, save "X ft"
                 const isTouch = rangeTypeEl?.value === 'touch';
                 const rangeStr = isTouch ? 'Touch' : (rangeEl?.value || '60') + ' ft';
 
@@ -1141,7 +1089,6 @@ document.getElementById('pc-alignment').textContent = c.alignment || '';
 
                 refreshSpellsList(updatedSpells);
 
-                // Clear form fields
                 if (nameEl) nameEl.value = '';
                 if (levelEl) levelEl.value = '1';
                 if (schoolEl) schoolEl.value = 'Abjuration';
@@ -1161,7 +1108,6 @@ document.getElementById('pc-alignment').textContent = c.alignment || '';
                     materialDescEl.style.display = 'none';
                 }
 
-                // Hide the form and reset the toggle button text
                 const formContainer = document.getElementById('spell-form-container');
                 const spellToggleBtn = document.getElementById('spell-toggle-form-btn');
                 if (formContainer) formContainer.style.display = 'none';
@@ -1169,7 +1115,6 @@ document.getElementById('pc-alignment').textContent = c.alignment || '';
             });
         }
 
-        // ---------- FEATURES & ABILITIES MENU ----------
         const featuresBtn = document.getElementById('features');
         const featuresMenu = document.getElementById('features-side-menu');
         const featuresCloseBtn = document.getElementById('features-close-btn');
@@ -1254,7 +1199,6 @@ document.getElementById('pc-alignment').textContent = c.alignment || '';
             if (equipmentOverlay) equipmentOverlay.style.display = 'none';
         }
 
-        // Features button toggles the side menu
         if (featuresBtn) {
             featuresBtn.addEventListener('click', () => {
                 const isOpen = featuresMenu && featuresMenu.style.right === '0px';
@@ -1267,12 +1211,10 @@ document.getElementById('pc-alignment').textContent = c.alignment || '';
             });
         }
 
-        // Close button
         if (featuresCloseBtn) {
             featuresCloseBtn.addEventListener('click', closeFeaturesMenu);
         }
 
-        // Toggle features form show/hide with button text change
         const featuresToggleBtn = document.getElementById('features-toggle-form-btn');
         if (featuresToggleBtn) {
             featuresToggleBtn.addEventListener('click', () => {
@@ -1289,7 +1231,6 @@ document.getElementById('pc-alignment').textContent = c.alignment || '';
             });
         }
 
-        // Add ability/feat button
         if (featuresAddBtn) {
             featuresAddBtn.addEventListener('click', async function addFeature() {
                 const typeEl = document.getElementById('feat-type');
@@ -1314,12 +1255,10 @@ document.getElementById('pc-alignment').textContent = c.alignment || '';
 
                 refreshFeaturesList(updatedFeatures);
 
-                // Clear form fields
                 if (typeEl) typeEl.value = 'Ability';
                 if (nameEl) nameEl.value = '';
                 if (descEl) descEl.value = '';
 
-                // Hide the form and reset the toggle button text
                 const formContainer = document.getElementById('features-form-container');
                 const featuresToggleBtn = document.getElementById('features-toggle-form-btn');
                 if (formContainer) formContainer.style.display = 'none';
@@ -1327,7 +1266,6 @@ document.getElementById('pc-alignment').textContent = c.alignment || '';
             });
         }
 
-        // Update overlay click to also close features menu
         if (equipmentOverlay) {
             equipmentOverlay.addEventListener('click', () => {
                 closeEquipmentMenu();
@@ -1341,7 +1279,4 @@ document.getElementById('pc-alignment').textContent = c.alignment || '';
     }
 }
 
-// Initialize: load the character when the page loads
 loadCharacter();
-
-

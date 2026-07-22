@@ -1,9 +1,5 @@
-// Alignment API + dropdown setup using D&D 5e API (2014)
-
 function getBaseUrl() {
-  // Prefer Vite env; fall back to runtime window var; then default.
   try {
-    // eslint-disable-next-line no-undef
     return import.meta?.env?.EXTERNAL_API_BASE_URL || window?.EXTERNAL_API_BASE_URL || 'https://www.dnd5eapi.co/api';
   } catch {
     return window?.EXTERNAL_API_BASE_URL || 'https://www.dnd5eapi.co/api';
@@ -15,12 +11,10 @@ function normalize(str) {
 }
 
 async function fetchAlignments() {
-  // Per requirement, use the /2014 endpoint.
   const baseUrl = getBaseUrl();
   const res = await fetch(`${baseUrl}/2014/alignments`);
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   const data = (await res.json()) ?? {};
-  // D&D 5e API returns { results: [{ name, url }, ...] }
   return data.results ?? [];
 }
 
@@ -84,7 +78,6 @@ export async function fetchAlignmentsAndSetupDropdown({ inputEl, dropdownEl, slu
   }
 
   inputEl.addEventListener('focus', () => {
-    // keep dropdown hidden until user interacts; focus counts as interaction.
     render();
   });
 
@@ -135,10 +128,8 @@ export async function fetchAlignmentsAndSetupDropdown({ inputEl, dropdownEl, slu
     if (!clickedInside) hide();
   });
 
-  // Initial data/state (keep dropdown hidden until interaction)
   const results = await fetchAlignments();
 
-  // D&D 5e API includes the 9 alignments; enforce the required display order.
   const order = [
     'lawful-good',
     'neutral-good',
@@ -162,7 +153,4 @@ export async function fetchAlignmentsAndSetupDropdown({ inputEl, dropdownEl, slu
 
   dropdownEl.innerHTML = '';
   slugEl.value = '';
-
-  // render will be triggered by focus/input
-n}
-
+}
