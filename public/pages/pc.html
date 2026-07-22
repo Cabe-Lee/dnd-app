@@ -7,14 +7,27 @@
 </head>
 <body>
     <h1>Character Sheet</h1>
+    <button><a href="characters.html">Back to Character List</a></button>
     <div id="pc-sheet" style="max-width: 800px; margin: 0 auto; padding: 20px;">
+        <button id="features" style="background: #333; color: #fff; border: 1px solid #555; border-radius: 4px; cursor: pointer; padding: 6px 12px; font-size: 0.9em; margin-bottom: 16px;">Abilities & Feats</button>
+        <button id="equipment" style="background: #333; color: #fff; border: 1px solid #555; border-radius: 4px; cursor: pointer; padding: 6px 12px; font-size: 0.9em; margin-bottom: 16px;">Equipment</button>
+        <button id="spells" style="background: #333; color: #fff; border: 1px solid #555; border-radius: 4px; cursor: pointer; padding: 6px 12px; font-size: 0.9em; margin-bottom: 16px;">Spells</button>
+        <button id="long-rest" style="background: #333; color: #fff; border: 1px solid #555; border-radius: 4px; cursor: pointer; padding: 6px 12px; font-size: 0.9em; margin-bottom: 16px;">Long Rest</button> <span id="pc-long-rest-result" style="font-size: 0.9em; color: #5a5; display: none;"></span>
+        <div style="display: flex; gap: 32px; flex-wrap: wrap;">
         <div id="pc-loading" style="color: #888;">Loading character...</div>
         <div id="pc-content" style="display: none;">
 
+            <div id="pc-text-input-instruction" style="color: #aaa; font-size: 0.85em; margin-bottom: 8px; display: none;">Tip: Type a value and press Enter to change it.</div>
             <div style="display: flex; gap: 24px; align-items: baseline; flex-wrap: wrap; margin-bottom: 20px;">
-                <h2 id="pc-name" style="margin: 0;"></h2>
-                <span id="pc-race-class" style="font-size: 1.1em; color: #aaa;"></span>
-                <span id="pc-level" style="font-size: 1.1em; color: #aaa;"></span>
+                <input type="text" id="pc-name" placeholder="Name" style="font-size: 1.5em; font-weight: 700; width: 160px; background: #1e1e1e; color: #fff; border: 1px solid #555; border-radius: 4px; padding: 2px 6px;">
+                <input type="text" id="pc-race" placeholder="Race" style="font-size: 1.1em; width: 110px; background: #1e1e1e; color: #aaa; border: 1px solid #555; border-radius: 4px; padding: 2px 6px;">
+                <input type="text" id="pc-class" placeholder="Class" style="font-size: 1.1em; width: 110px; background: #1e1e1e; color: #aaa; border: 1px solid #555; border-radius: 4px; padding: 2px 6px;">
+                <div style="display: flex; align-items: center; gap: 4px;">
+                    <label style="font-size: 1.1em; color: #aaa; margin-right: 4px;">Level</label>
+                    <input type="number" id="pc-level" value="1" min="1" max="20" step="1" style="font-size: 1.1em; width: 50px; text-align: center; background: #1e1e1e; color: #aaa; border: 1px solid #555; border-radius: 4px; padding: 2px 4px;">
+                    <button type="button" id="pc-level-up" style="background: #333; color: #fff; border: 1px solid #555; border-radius: 4px; cursor: pointer; padding: 2px 6px; font-size: 0.9em;">▲</button>
+                    <button type="button" id="pc-level-down" style="background: #333; color: #fff; border: 1px solid #555; border-radius: 4px; cursor: pointer; padding: 2px 6px; font-size: 0.9em;">▼</button>
+                </div>
                 <span id="pc-alignment" style="font-size: 1em; color: #888;"></span>
             </div>
 
@@ -32,11 +45,13 @@
 
             <div style="border: 1px solid #444; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
                 <h3>Combat</h3>
-                <div style="display: flex; gap: 32px; flex-wrap: wrap;">
-                    <div><strong>Hit Points (Max):</strong> <span id="pc-hp"></span></div>
+                <button id="roll-initiative" style="background: #333; color: #fff; border: 1px solid #555; border-radius: 4px; cursor: pointer; padding: 6px 12px; font-size: 0.9em; margin-bottom: 16px;">Roll Initiative</button>
+                <div id="initiative-result" style="font-size: 1.2em; color: #e0b040; margin-bottom: 16px;"></div>
+                
+                    <div><strong>Hit Points (Max):</strong> <input type="number" id="pc-hp" style="width: 60px; background: #1e1e1e; color: #fff; border: 1px solid #555; border-radius: 4px; padding: 2px 4px;"></div>
                     <div><strong>Hit Points Left:</strong> <input type="number" id="pc-hp-left" style="width: 60px;"></div>
-                    <div><strong>Armor Class:</strong> <span id="pc-ac"></span></div>
-                    <div><strong>Hit Dice:</strong> <span id="pc-hit-dice"></span></div>
+                    <div><strong>Armor Class:</strong> <input type="number" id="pc-ac" style="width: 60px; background: #1e1e1e; color: #fff; border: 1px solid #555; border-radius: 4px; padding: 2px 4px;"></div>
+                    <div><strong>Hit Dice:</strong> <span id="pc-hit-dice" style="cursor: pointer; text-decoration: underline dotted;" title="Click to roll a Hit Die during a short rest"></span> <span id="pc-hit-dice-result" style="font-size: 0.85em; color: #e0b040;"></span></div>
                     <div><strong>Proficiency Bonus:</strong> <span id="pc-prof-bonus"></span></div>
             </div>
 
@@ -50,6 +65,189 @@
                 <div><strong>Equipment:</strong> <span id="pc-equipment"></span></div>
 
         </div>
+
+    <!-- Equipment Side Menu -->
+    <div id="equipment-side-menu" style="position: fixed; top: 0; right: -350px; width: 320px; height: 100%; background: #1e1e1e; border-left: 2px solid #555; padding: 20px; z-index: 1000; transition: right 0.3s ease; overflow-y: auto; box-shadow: -4px 0 12px rgba(0,0,0,0.5);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <h3 style="margin: 0; color: #fff;">Equipment</h3>
+            <button id="equipment-close-btn" style="background: none; color: #aaa; border: none; font-size: 1.5em; cursor: pointer;">&times;</button>
+        </div>
+        
+        <!-- Add Item Form (hidden by default, toggled by the toggle button) -->
+        <div id="equip-form-container" style="display: none; border: 1px solid #444; border-radius: 8px; padding: 12px; margin-bottom: 16px;">
+            <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
+                <input type="number" id="equip-qty" value="1" min="1" style="width: 50px; background: #2a2a2a; color: #fff; border: 1px solid #555; border-radius: 4px; padding: 4px 6px; font-size: 0.9em;">
+                <input type="text" id="equip-name" placeholder="Item name" style="flex: 1; background: #2a2a2a; color: #fff; border: 1px solid #555; border-radius: 4px; padding: 4px 6px; font-size: 0.9em;">
+            </div>
+            <select id="equip-type" style="width: 100%; background: #2a2a2a; color: #fff; border: 1px solid #555; border-radius: 4px; padding: 4px 6px; font-size: 0.9em; margin-bottom: 8px;">
+                <option value="adventuring gear">Adventuring Gear</option>
+                <option value="consumable">Consumable</option>
+                <option value="clothing">Clothing</option>
+                <option value="light armor">Light Armor</option>
+                <option value="medium armor">Medium Armor</option>
+                <option value="heavy armor">Heavy Armor</option>
+                <option value="simple melee weapon">Simple Melee Weapon</option>
+                <option value="martial melee weapon">Martial Melee Weapon</option>
+                <option value="simple ranged weapon">Simple Ranged Weapon</option>
+                <option value="martial ranged weapon">Martial Ranged Weapon</option>
+                <option value="ring">Ring</option>
+                <option value="ammunition">Ammunition</option>
+                <option value="arcane focus">Arcane Focus</option>
+                <option value="tool">Tool</option>
+                <option value="holy symbol">Holy Symbol</option>
+                <option value="material">Material</option>
+                <option value="gemstone">Gemstone</option>
+                <option value="poison">Poison</option>
+            </select>
+            <textarea id="equip-description" placeholder="Description..." style="width: 100%; background: #2a2a2a; color: #ccc; border: 1px solid #555; border-radius: 4px; padding: 4px 6px; font-size: 0.85em; resize: vertical; min-height: 40px; margin-bottom: 8px; box-sizing: border-box;"></textarea>
+            <div style="margin-bottom: 8px;">
+                <label style="color: #aaa; font-size: 0.9em;">
+                    <input type="checkbox" id="equip-magic"> Magic Item
+                </label>
+                <select id="equip-rarity" style="display: none; width: 100%; background: #2a2a2a; color: #fff; border: 1px solid #555; border-radius: 4px; padding: 4px 6px; font-size: 0.9em; margin-top: 4px;">
+                    <option value="common">Common</option>
+                    <option value="uncommon">Uncommon</option>
+                    <option value="rare">Rare</option>
+                    <option value="very rare">Very Rare</option>
+                    <option value="legendary">Legendary</option>
+                </select>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
+                <input type="number" id="equip-money" value="0" min="0" style="width: 70px; background: #2a2a2a; color: #fff; border: 1px solid #555; border-radius: 4px; padding: 4px 6px; font-size: 0.9em;">
+                <select id="equip-money-type" style="flex: 1; background: #2a2a2a; color: #fff; border: 1px solid #555; border-radius: 4px; padding: 4px 6px; font-size: 0.9em;">
+                    <option value="CP">CP</option>
+                    <option value="SP">SP</option>
+                    <option value="EP">EP</option>
+                    <option value="GP" selected>GP</option>
+                    <option value="PP">PP</option>
+                </select>
+            </div>
+            <button id="equipment-add-btn" style="width: 100%; background: #444; color: #fff; border: 1px solid #555; border-radius: 4px; cursor: pointer; padding: 6px 12px; font-size: 0.9em;">+ Add Item to Equipment</button>
+        </div>
+        <button id="equip-toggle-form-btn" style="width: 100%; background: #444; color: #fff; border: 1px solid #555; border-radius: 4px; cursor: pointer; padding: 6px 12px; font-size: 0.9em; margin-bottom: 12px;">+ Add Item</button>
+
+        <div id="equipment-list" style="display: flex; flex-direction: column; gap: 6px;"></div>
+    </div>
+    <!-- Overlay for side menus -->
+    <div id="equipment-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 999; display: none;"></div>
+
+    <!-- Spells Side Menu -->
+    <div id="spells-side-menu" style="position: fixed; top: 0; right: -350px; width: 320px; height: 100%; background: #1e1e1e; border-left: 2px solid #555; padding: 20px; z-index: 1000; transition: right 0.3s ease; overflow-y: auto; box-shadow: -4px 0 12px rgba(0,0,0,0.5);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <h3 style="margin: 0; color: #fff;">Spells</h3>
+            <button id="spells-close-btn" style="background: none; color: #aaa; border: none; font-size: 1.5em; cursor: pointer;">&times;</button>
+        </div>
+        
+        <!-- Add Spell Form (hidden by default, toggled by the toggle button) -->
+        <div id="spell-form-container" style="display: none; border: 1px solid #444; border-radius: 8px; padding: 12px; margin-bottom: 16px;">
+            <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
+                <input type="number" id="spell-level" value="1" min="0" max="9" style="width: 50px; background: #2a2a2a; color: #fff; border: 1px solid #555; border-radius: 4px; padding: 4px 6px; font-size: 0.9em;">
+                <input type="text" id="spell-name" placeholder="Spell name" style="flex: 1; background: #2a2a2a; color: #fff; border: 1px solid #555; border-radius: 4px; padding: 4px 6px; font-size: 0.9em;">
+            </div>
+            <select id="spell-school" style="width: 100%; background: #2a2a2a; color: #fff; border: 1px solid #555; border-radius: 4px; padding: 4px 6px; font-size: 0.9em; margin-bottom: 8px;">
+                <option value="Abjuration">Abjuration</option>
+                <option value="Conjuration">Conjuration</option>
+                <option value="Divination">Divination</option>
+                <option value="Enchantment">Enchantment</option>
+                <option value="Evocation">Evocation</option>
+                <option value="Illusion">Illusion</option>
+                <option value="Necromancy">Necromancy</option>
+                <option value="Transmutation">Transmutation</option>
+            </select>
+            <textarea id="spell-description" placeholder="Spell description / effects..." style="width: 100%; background: #2a2a2a; color: #ccc; border: 1px solid #555; border-radius: 4px; padding: 4px 6px; font-size: 0.85em; resize: vertical; min-height: 40px; margin-bottom: 8px; box-sizing: border-box;"></textarea>
+            <div style="margin-bottom: 8px;">
+                <label style="color: #aaa; font-size: 0.9em; display: block; margin-bottom: 4px;">Casting Time</label>
+                <select id="spell-casting-time" style="width: 100%; background: #2a2a2a; color: #fff; border: 1px solid #555; border-radius: 4px; padding: 4px 6px; font-size: 0.9em;">
+                    <option value="1 action">1 Action</option>
+                    <option value="1 bonus action">1 Bonus Action</option>
+                    <option value="1 reaction">1 Reaction</option>
+                    <option value="1 minute">1 Minute</option>
+                    <option value="10 minutes">10 Minutes</option>
+                    <option value="1 hour">1 Hour</option>
+                    <option value="8 hours">8 Hours</option>
+                    <option value="24 hours">24 Hours</option>
+                </select>
+            </div>
+            <div style="margin-bottom: 8px;">
+                <label style="color: #aaa; font-size: 0.9em; display: block; margin-bottom: 4px;">Range</label>
+                <select id="spell-range-type" style="width: 100%; background: #2a2a2a; color: #fff; border: 1px solid #555; border-radius: 4px; padding: 4px 6px; font-size: 0.9em; margin-bottom: 4px;">
+                    <option value="distance">Distance</option>
+                    <option value="touch">Touch</option>
+                </select>
+                <div id="spell-range-distance" style="display: flex; gap: 8px; align-items: center;">
+                    <input type="number" id="spell-range" value="60" min="0" style="width: 70px; background: #2a2a2a; color: #fff; border: 1px solid #555; border-radius: 4px; padding: 4px 6px; font-size: 0.9em;">
+                    <span style="color: #aaa; font-size: 0.9em;">ft</span>
+                </div>
+            </div>
+            <div style="margin-bottom: 8px;">
+                <label style="color: #aaa; font-size: 0.9em; display: block; margin-bottom: 4px;">Duration</label>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <input type="number" id="spell-duration-value" value="1" min="1" style="width: 50px; background: #2a2a2a; color: #fff; border: 1px solid #555; border-radius: 4px; padding: 4px 6px; font-size: 0.9em;">
+                    <select id="spell-duration-type" style="flex: 1; background: #2a2a2a; color: #fff; border: 1px solid #555; border-radius: 4px; padding: 4px 6px; font-size: 0.9em;">
+                        <option value="instantaneous">Instantaneous</option>
+                        <option value="round">Round</option>
+                        <option value="minute">Minute</option>
+                        <option value="minutes">Minutes</option>
+                        <option value="hour">Hour</option>
+                        <option value="hours">Hours</option>
+                        <option value="day">Day</option>
+                        <option value="days">Days</option>
+                    </select>
+                </div>
+            </div>
+            <div style="display: flex; gap: 16px; align-items: center; margin-bottom: 8px;">
+                <label style="color: #aaa; font-size: 0.9em;">
+                    <input type="checkbox" id="spell-concentration"> Concentration
+                </label>
+                <label style="color: #aaa; font-size: 0.9em;">
+                    <input type="checkbox" id="spell-ritual"> Ritual
+                </label>
+            </div>
+            <div style="margin-bottom: 8px;">
+                <label style="color: #aaa; font-size: 0.9em;">Components:</label>
+                <div style="display: flex; gap: 16px; margin-top: 4px; margin-bottom: 4px;">
+                    <label style="color: #aaa; font-size: 0.85em;">
+                        <input type="checkbox" id="spell-comp-v"> Verbal (V)
+                    </label>
+                    <label style="color: #aaa; font-size: 0.85em;">
+                        <input type="checkbox" id="spell-comp-s"> Somatic (S)
+                    </label>
+                    <label style="color: #aaa; font-size: 0.85em;">
+                        <input type="checkbox" id="spell-comp-m"> Material (M)
+                    </label>
+                </div>
+                <input type="text" id="spell-material-desc" placeholder="Material components..." style="display: none; width: 100%; background: #2a2a2a; color: #fff; border: 1px solid #555; border-radius: 4px; padding: 4px 6px; font-size: 0.85em; box-sizing: border-box;">
+            </div>
+            <button id="spells-add-btn" style="width: 100%; background: #444; color: #fff; border: 1px solid #555; border-radius: 4px; cursor: pointer; padding: 6px 12px; font-size: 0.9em;">+ Add Spell</button>
+        </div>
+        <button id="spell-toggle-form-btn" style="width: 100%; background: #444; color: #fff; border: 1px solid #555; border-radius: 4px; cursor: pointer; padding: 6px 12px; font-size: 0.9em; margin-bottom: 12px;">+ Add Spell</button>
+
+        <div id="spells-list" style="display: flex; flex-direction: column; gap: 6px;"></div>
+    </div>
+
+    <!-- Features & Abilities Side Menu -->
+    <div id="features-side-menu" style="position: fixed; top: 0; right: -350px; width: 320px; height: 100%; background: #1e1e1e; border-left: 2px solid #555; padding: 20px; z-index: 1000; transition: right 0.3s ease; overflow-y: auto; box-shadow: -4px 0 12px rgba(0,0,0,0.5);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <h3 style="margin: 0; color: #fff;">Abilities &amp; Feats</h3>
+            <button id="features-close-btn" style="background: none; color: #aaa; border: none; font-size: 1.5em; cursor: pointer;">&times;</button>
+        </div>
+        
+        <!-- Add Ability/Feat Form (hidden by default, toggled by the toggle button) -->
+        <div id="features-form-container" style="display: none; border: 1px solid #444; border-radius: 8px; padding: 12px; margin-bottom: 16px;">
+            <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 8px;">
+                <select id="feat-type" style="width: 100px; background: #2a2a2a; color: #fff; border: 1px solid #555; border-radius: 4px; padding: 4px 6px; font-size: 0.9em;">
+                    <option value="Ability">Ability</option>
+                    <option value="Feat">Feat</option>
+                </select>
+                <input type="text" id="feat-name" placeholder="Name" style="flex: 1; background: #2a2a2a; color: #fff; border: 1px solid #555; border-radius: 4px; padding: 4px 6px; font-size: 0.9em;">
+            </div>
+            <textarea id="feat-description" placeholder="Description..." style="width: 100%; background: #2a2a2a; color: #ccc; border: 1px solid #555; border-radius: 4px; padding: 4px 6px; font-size: 0.85em; resize: vertical; min-height: 60px; margin-bottom: 8px; box-sizing: border-box;"></textarea>
+            <button id="features-add-btn" style="width: 100%; background: #444; color: #fff; border: 1px solid #555; border-radius: 4px; cursor: pointer; padding: 6px 12px; font-size: 0.9em;">+ Add Ability / Feat</button>
+        </div>
+        <button id="features-toggle-form-btn" style="width: 100%; background: #444; color: #fff; border: 1px solid #555; border-radius: 4px; cursor: pointer; padding: 6px 12px; font-size: 0.9em; margin-bottom: 12px;">+ Add Ability / Feat</button>
+
+        <div id="features-list" style="display: flex; flex-direction: column; gap: 6px;"></div>
+    </div>
 
     <script type="module" src="../scripts/pc.js"></script>
 </body>

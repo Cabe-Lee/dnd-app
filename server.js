@@ -61,39 +61,6 @@ function openOrRefresh(url) {
   }
 }
 
-// --- Live reload (simple) ---
-const clients = new Set();
-function broadcastReload() {
-  const msg = 'reload';
-  for (const res of clients) {
-    try {
-      res.write(`data: ${msg}\n\n`);
-    } catch {
-      clients.delete(res);
-    }
-  }
-}
-
-function injectLiveReload(html) {
-  const snippet = `\n<script>\n  (function(){\n    const es = new EventSource('/__livereload');\n    es.onmessage = function(e){\n      if(e && e.data === 'reload'){\n        window.location.reload();\n      }\n    };\n  })();\n</script>\n`;
-  if (html.includes('</body>')) {
-    return html.replace('</body>', `${snippet}</body>`);
-  }
-  return html + snippet;
-}
-
-function watchPublicForChanges() {
-  let timer = null;
-  try {
-    fs.watch(ROOT_DIR, { recursive: true }, () => {
-      if (timer) clearTimeout(timer);
-      timer = setTimeout(() => broadcastReload(), 100);
-    });
-  } catch {
-    // ignore
-  }
-}
-
 closeExistingServerOnWindows(PORT);
 
 const server = http.createServer((req, res) => {
@@ -103,7 +70,7 @@ const server = http.createServer((req, res) => {
   // CORS headers for all API responses
   const setCors = () => {
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, OPTIONS');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   };
 
@@ -112,20 +79,6 @@ const server = http.createServer((req, res) => {
     setCors();
     res.statusCode = 204;
     res.end();
-    return;
-  }
-
-  // SSE endpoint
-  if (pathname === '/__livereload') {
-    res.writeHead(200, {
-      'Content-Type': 'text/event-stream; charset=utf-8',
-      'Cache-Control': 'no-cache, no-transform',
-      Connection: 'keep-alive',
-      'Access-Control-Allow-Origin': '*',
-    });
-    res.write('\n');
-    clients.add(res);
-    req.on('close', () => clients.delete(res));
     return;
   }
 
@@ -219,9 +172,16 @@ const server = http.createServer((req, res) => {
           }
 
           // Merge updates into the character
+          // Handle nested objects (skills, savingThrows) with Object.assign
           if (updates.skills) Object.assign(characters[idx].skills, updates.skills);
           if (updates.savingThrows) Object.assign(characters[idx].savingThrows, updates.savingThrows);
           if (updates.abilityScores) characters[idx].abilityScores = updates.abilityScores;
+          // Handle all other top-level fields (name, race, class, hitPointsLeft, etc.)
+          Object.keys(updates).forEach(key => {
+            if (key !== 'skills' && key !== 'savingThrows' && key !== 'abilityScores') {
+              characters[idx][key] = updates[key];
+            }
+          });
 
           fs.writeFile(dbPath, JSON.stringify(characters, null, 2), 'utf8', (writeErr) => {
             if (writeErr) {
@@ -238,6 +198,266 @@ const server = http.createServer((req, res) => {
       } catch (parseErr) {
         res.statusCode = 400;
         res.end(JSON.stringify({ error: 'Invalid JSON' }));
+      }
+    });
+    return;
+  }
+
+  // API: DELETE /api/characters/:id — delete a character
+  const deleteMatch = pathname.match(/^\/api\/characters\/(\d+)$/);
+  if (req.method === 'DELETE' && deleteMatch) {
+    setCors();
+    const characterId = Number(deleteMatch[1]);
+    const dbPath = path.join(ROOT_DIR, 'json', 'characters.json');
+
+    fs.readFile(dbPath, 'utf8', (readErr, raw) => {
+      if (readErr) {
+        res.statusCode = 500;
+        res.end(JSON.stringify({ error: 'Could not read database' }));
+        return;
+      }
+
+      let characters = [];
+      try {
+        characters = JSON.parse(raw);
+      } catch (e) {
+        res.statusCode = 500;
+        res.end(JSON.stringify({ error: 'Invalid database' }));
+        return;
+      }
+
+      const idx = characters.findIndex(c => c.id === characterId);
+      if (idx === -1) {
+        res.statusCode = 404;
+        res.end(JSON.stringify({ error: 'Character not found' }));
+        return;
+      }
+
+      characters.splice(idx, 1);
+
+      fs.writeFile(dbPath, JSON.stringify(characters, null, 2), 'utf8', (writeErr) => {
+        if (writeErr) {
+          res.statusCode = 500;
+          res.end(JSON.stringify({ error: 'Could not delete character' }));
+          return;
+        }
+        console.log(`Character ${characterId} deleted`);
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify({ success: true }));
+      });
+    });
+    return;
+  }
+
+  // API: POST /api/signup — register a new user
+  if (req.method === 'POST' && pathname === '/api/signup') {
+    setCors();
+    let body = '';
+    req.setEncoding('utf8');
+    req.on('data', (chunk) => (body += chunk));
+    req.on('end', () => {
+      try {
+        const data = JSON.parse(body);
+        const { username, email, password } = data;
+
+        if (!username || !email || !password) {
+          res.statusCode = 400;
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify({ error: 'All fields are required.' }));
+          return;
+        }
+
+        const dbPath = path.join(ROOT_DIR, 'json', 'login.json');
+
+        fs.readFile(dbPath, 'utf8', (readErr, raw) => {
+          if (readErr) {
+            res.statusCode = 500;
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ error: 'Could not read account database.' }));
+            return;
+          }
+
+          let users = {};
+          try {
+            users = JSON.parse(raw);
+          } catch (e) {
+            users = {};
+          }
+
+          // Check for duplicate username or email
+          for (const key of Object.keys(users)) {
+            if (users[key].username === username) {
+              res.statusCode = 409;
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify({ error: 'An account with this username already exists. Please choose a different username.' }));
+              return;
+            }
+            if (users[key].email === email) {
+              res.statusCode = 409;
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify({ error: 'An account with this email address is already registered. Please use a different email.' }));
+              return;
+            }
+          }
+
+          // Generate a new user ID
+          const userId = Object.keys(users).length > 0 
+            ? Math.max(...Object.keys(users).map(Number)) + 1 
+            : 1;
+
+          users[userId] = { username, email, password };
+
+          fs.writeFile(dbPath, JSON.stringify(users, null, 2), 'utf8', (writeErr) => {
+            if (writeErr) {
+              res.statusCode = 500;
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify({ error: 'Could not save account.' }));
+              return;
+            }
+            console.log(`User ${username} signed up with ID: ${userId}`);
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ success: true, userId }));
+          });
+        });
+      } catch (parseErr) {
+        res.statusCode = 400;
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify({ error: 'Invalid JSON.' }));
+      }
+    });
+    return;
+  }
+
+  // API: GET /api/check-account — check if username or email is already taken
+  if (req.method === 'GET' && pathname === '/api/check-account') {
+    setCors();
+    const reqUrl = new URL(req.url, `http://${req.headers.host}`);
+    const username = reqUrl.searchParams.get('username');
+    const email = reqUrl.searchParams.get('email');
+
+    const dbPath = path.join(ROOT_DIR, 'json', 'login.json');
+
+    fs.readFile(dbPath, 'utf8', (readErr, raw) => {
+      if (readErr) {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify({ available: true }));
+        return;
+      }
+
+      let users = {};
+      try {
+        users = JSON.parse(raw);
+      } catch (e) {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify({ available: true }));
+        return;
+      }
+
+      if (username) {
+        for (const key of Object.keys(users)) {
+          if (users[key].username === username) {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ available: false, field: 'username', message: 'This username is already taken. Please choose another.' }));
+            return;
+          }
+        }
+      }
+
+      if (email) {
+        for (const key of Object.keys(users)) {
+          if (users[key].email === email) {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ available: false, field: 'email', message: 'This email is already registered. Please use a different email.' }));
+            return;
+          }
+        }
+      }
+
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify({ available: true }));
+    });
+    return;
+  }
+
+  // API: POST /api/login — authenticate a user
+  if (req.method === 'POST' && pathname === '/api/login') {
+    setCors();
+    let body = '';
+    req.setEncoding('utf8');
+    req.on('data', (chunk) => (body += chunk));
+    req.on('end', () => {
+      try {
+        const data = JSON.parse(body);
+        const { username, password } = data;
+
+        if (!username || !password) {
+          res.statusCode = 400;
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify({ error: 'Username and password are required.' }));
+          return;
+        }
+
+        const dbPath = path.join(ROOT_DIR, 'json', 'login.json');
+
+        fs.readFile(dbPath, 'utf8', (readErr, raw) => {
+          if (readErr) {
+            res.statusCode = 500;
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ error: 'Could not read account database.' }));
+            return;
+          }
+
+          let users = {};
+          try {
+            users = JSON.parse(raw);
+          } catch (e) {
+            users = {};
+          }
+
+          let foundUser = null;
+          for (const key of Object.keys(users)) {
+            // Compare hashed passwords (both stored and incoming are SHA-256 hex strings)
+            if (users[key].username === username && users[key].password === password) {
+              foundUser = { id: Number(key), username: users[key].username, email: users[key].email };
+              break;
+            }
+          }
+
+          if (foundUser) {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ success: true, user: foundUser }));
+          } else {
+            // Check if username exists at all (wrong password) or doesn't exist
+            let usernameExists = false;
+            for (const key of Object.keys(users)) {
+              if (users[key].username === username) {
+                usernameExists = true;
+                break;
+              }
+            }
+            if (usernameExists) {
+              res.statusCode = 401;
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify({ error: 'Incorrect password. Please try again.' }));
+            } else {
+              res.statusCode = 401;
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify({ error: 'Account not found. Please check your username or sign up.' }));
+            }
+          }
+        });
+      } catch (parseErr) {
+        res.statusCode = 400;
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify({ error: 'Invalid JSON.' }));
       }
     });
     return;
@@ -283,22 +503,6 @@ const server = http.createServer((req, res) => {
       return;
     }
 
-    // Live-reload injection for HTML
-    if (path.extname(filePath).toLowerCase() === '.html') {
-      fs.readFile(filePath, 'utf8', (readErr, raw) => {
-        if (readErr) {
-          res.statusCode = 500;
-          res.end('Server Error');
-          return;
-        }
-        const html = injectLiveReload(raw);
-        res.statusCode = 200;
-        res.setHeader('Content-Type', contentTypeFor(filePath));
-        res.end(html);
-      });
-      return;
-    }
-
     res.statusCode = 200;
     res.setHeader('Content-Type', contentTypeFor(filePath));
     fs.createReadStream(filePath).pipe(res);
@@ -309,6 +513,5 @@ server.listen(PORT, () => {
   const url = `http://localhost:${PORT}/pages/index.html`;
   console.log(`Server running: ${url}`);
 
-  watchPublicForChanges();
   openOrRefresh(url);
 });

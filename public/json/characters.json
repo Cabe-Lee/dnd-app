@@ -1,64 +1,5 @@
 [
   {
-    "name": "Gib",
-    "race": "Dwarf",
-    "class": "Barbarian",
-    "level": 1,
-    "background": "Bro",
-    "alignment": "Neutral Good",
-    "experience": 0,
-    "abilityScores": {
-      "strength": 12,
-      "dexterity": 10,
-      "constitution": 13,
-      "intelligence": 15,
-      "wisdom": 14,
-      "charisma": 8
-    },
-    "savingThrows": {
-      "strength": true,
-      "dexterity": false,
-      "constitution": true,
-      "intelligence": false,
-      "wisdom": false,
-      "charisma": false
-    },
-    "skills": {
-      "acrobatics": false,
-      "animalHandling": false,
-      "arcana": false,
-      "athletics": true,
-      "deception": false,
-      "history": false,
-      "insight": true,
-      "intimidation": true,
-      "investigation": false,
-      "medicine": false,
-      "nature": true,
-      "perception": false,
-      "performance": false,
-      "persuasion": true,
-      "religion": false,
-      "sleightOfHand": false,
-      "stealth": false,
-      "survival": true
-    },
-    "hitPoints": 6,
-    "hitPointsLeft": 6,
-    "armorClass": 10,
-    "hitDice": "d12",
-    "proficiencyBonus": 2,
-    "equipment": [
-      "Instrument"
-    ],
-    "featuresAndTraits": [],
-    "personalityTraits": "Bob",
-    "ideals": "Bob",
-    "bonds": "Bob",
-    "flaws": "Bob",
-    "id": 3
-  },
-  {
     "name": "Gob",
     "race": "Goblin",
     "class": "Bard",
@@ -134,9 +75,9 @@
       "charisma": 14
     },
     "savingThrows": {
-      "strength": false,
+      "strength": true,
       "dexterity": false,
-      "constitution": false,
+      "constitution": true,
       "intelligence": false,
       "wisdom": false,
       "charisma": false
@@ -161,17 +102,39 @@
       "stealth": false,
       "survival": true
     },
-    "hitPoints": 2,
-    "hitPointsLeft": 0,
+    "hitPoints": 12,
+    "hitPointsLeft": 12,
     "armorClass": 9,
     "hitDice": "d12",
     "proficiencyBonus": 2,
-    "equipment": [],
+    "equipment": [
+      {
+        "quantity": 1,
+        "name": "Bob",
+        "type": "adventuring gear",
+        "description": "",
+        "isMagicItem": false,
+        "rarity": "",
+        "moneyValue": 0,
+        "moneyType": "GP"
+      },
+      {
+        "quantity": 1,
+        "name": "Cloak",
+        "type": "clothing",
+        "description": "",
+        "isMagicItem": true,
+        "rarity": "uncommon",
+        "moneyValue": 0,
+        "moneyType": "GP"
+      }
+    ],
     "featuresAndTraits": [],
     "personalityTraits": "",
     "ideals": "",
     "bonds": "",
     "flaws": "",
-    "id": 5
+    "id": 5,
+    "hitDiceRemaining": 1
   }
 ]

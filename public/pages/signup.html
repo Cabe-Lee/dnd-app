@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Signup</title>
+    <link rel="stylesheet" href="../styles/auth.css">
+</head>
+<body>
+    <h1>Player Signup</h1>
+    <div id="form-error"></div>
+    <form id="signup-form" novalidate>
+        <div style="margin-bottom: 12px;">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <span id="username-error" class="error-message">Username must be at least 3 characters (letters, numbers, underscores only).</span>
+            <span id="username-success" class="success-message">✓ Valid</span>
+        </div>
+
+        <div style="margin-bottom: 12px;">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            <span id="email-error" class="error-message">Please enter a valid email address.</span>
+            <span id="email-success" class="success-message">✓ Valid</span>
+        </div>
+
+        <div style="margin-bottom: 12px;">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <span id="password-error" class="error-message">Password must be at least 8 characters with uppercase, lowercase, and a number.</span>
+            <span id="password-success" class="success-message">✓ Valid</span>
+        </div>
+
+        <div style="margin-bottom: 16px;">
+            <label for="confirm-password">Confirm Password:</label>
+            <input type="password" id="confirm-password" name="confirm-password" required>
+            <span id="confirm-password-error" class="error-message">Passwords do not match.</span>
+            <span id="confirm-password-success" class="success-message">✓ Match</span>
+        </div>
+
+        <button type="submit">Signup</button>
+        <button type="button" onclick="window.location.href='login.html'">Already have an account? Login</button>
+    </form>
+
+    <script src="../scripts/auth.js"></script>
+</body>
+</html>
