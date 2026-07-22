@@ -372,7 +372,6 @@ function initAbilityScores() {
   }
 }
 
-// Mirror character level into the Hit Dice section (readonly textbox).
 (function syncHitDiceLevel() {
   const levelInput = document.getElementById('level-input');
   const hitDiceLevelInput = document.getElementById('hit-dice-level-input');
@@ -386,7 +385,6 @@ function initAbilityScores() {
   sync();
 })();
 
-// Sync skill modifiers based on ability scores.
 (function syncSkillModifiers() {
   const skillToAbility = {
     'acrobatics-modifier': 'dexterity-input',
@@ -447,7 +445,6 @@ function initAbilityScores() {
         return;
       }
 
-      // Store ability-only base modifier; proficiency is applied in syncCheckedSkills().
       skillEl.setAttribute('data-base-mod', String(mod));
       skillEl.value = String(mod);
     });
@@ -474,7 +471,6 @@ function initAbilityScores() {
     'survival-input': 'survival-modifier'
   };
 
-  // Recompute ALL checked skills from scratch (base + proficiency) to avoid drift.
   const syncCheckedSkills = () => {
     const pb = getProficiencyBonus();
 
@@ -496,7 +492,6 @@ function initAbilityScores() {
     });
   };
 
-  // When ability scores change, recompute base mods then recompute checked totals.
   abilityIds.forEach((abilityInputId) => {
     const el = document.getElementById(abilityInputId);
     if (!el) return;
@@ -506,22 +501,18 @@ function initAbilityScores() {
     });
   });
 
-  // When a skill checkbox is toggled, just recompute checked skill totals (no drift).
   Object.keys(skillIds).forEach((skillCheckboxId) => {
     const checkbox = document.getElementById(skillCheckboxId);
     if (!checkbox) return;
     checkbox.addEventListener('change', syncCheckedSkills);
   });
 
-  // When proficiency changes, recompute checked totals.
   proficiencyEl?.addEventListener('input', syncCheckedSkills);
 
-  // Initial sync.
   syncBaseMods();
   syncCheckedSkills();
 })();
 
-// Sync saving throws (ability modifier + proficiency bonus when checked).
 (function syncSavingThrows() {
   const proficiencyEl = document.getElementById('proficiency-bonus-input');
   if (!proficiencyEl) return;
@@ -587,26 +578,21 @@ function initAbilityScores() {
     });
   };
 
-  // Ability score changes affect base mods.
   Object.values(savingThrowIds).forEach((abilityInputId) => {
     const el = document.getElementById(abilityInputId);
     if (!el) return;
     el.addEventListener('input', sync);
   });
 
-  // Checkbox toggles add/remove proficiency.
   Object.keys(savingThrowIds).forEach((checkboxId) => {
     const cb = document.getElementById(checkboxId);
     if (!cb) return;
     cb.addEventListener('change', sync);
   });
 
-  // Proficiency changes affect checked values.
   proficiencyEl.addEventListener('input', sync);
 
   sync();
 })();
 
 initAbilityScores();
-// NOTE: initAbilityScores() is called above for skill/base ability sync.
-

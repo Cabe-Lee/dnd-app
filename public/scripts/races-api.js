@@ -1,9 +1,7 @@
 // Shared race API + dropdown setup
 
 function getBaseUrl() {
-  // Prefer Vite env; fall back to runtime window var; then default.
   try {
-    // eslint-disable-next-line no-undef
     return import.meta?.env?.EXTERNAL_API_BASE_URL || window?.EXTERNAL_API_BASE_URL || 'https://www.dnd5eapi.co/api';
   } catch {
     return window?.EXTERNAL_API_BASE_URL || 'https://www.dnd5eapi.co/api';
@@ -95,7 +93,6 @@ export async function fetchRacesAndSetupDropdown({ inputEl, dropdownEl, slugEl }
   }
 
   inputEl.addEventListener('focus', () => {
-    // Only render after races are loaded; render() uses the local `races` variable.
     render();
   });
 
@@ -164,9 +161,4 @@ export async function fetchRacesAndSetupDropdown({ inputEl, dropdownEl, slugEl }
   dropdownEl.hidden = true;
   dropdownEl.innerHTML = '';
   slugEl.value = '';
-
-  // Keep dropdown hidden until user focuses/uses the textbox.
-  // render() will be called by the focus/input handlers.
-
 }
-

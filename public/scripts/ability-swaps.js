@@ -1,7 +1,3 @@
-// Dedicated ability swap handlers so ▲/▼ buttons swap values across the sheet.
-// This ensures: even when using standard array / point buy / roll / typing values,
-// the swap buttons move numbers between their neighboring stats.
-
 const abilityOrder = ['strength-input', 'dexterity-input', 'constitution-input', 'intelligence-input', 'wisdom-input', 'charisma-input'];
 
 function clampInt(value, min, max, fallback) {
@@ -48,8 +44,6 @@ function initAbilitySwaps() {
     charisma: { up: 'charisma-up-btn' }
   };
 
-  // Your current HTML uses: strength-down, dexterity-up/down, constitution-up/down, etc.
-  // We'll hook both naming patterns (with and without "-btn").
   const legacyButtonMap = {
     strength: { down: 'strength-down' },
     dexterity: { up: 'dexterity-up', down: 'dexterity-down' },
@@ -80,7 +74,6 @@ function initAbilitySwaps() {
     btn.addEventListener('click', () => swapValuesByInputIds(fromId, toId));
   };
 
-  // Wire legacy ids.
   Object.keys(legacyButtonMap).forEach((abilityKey) => {
     wire(abilityKey, 'up', legacyButtonMap[abilityKey].up);
     wire(abilityKey, 'down', legacyButtonMap[abilityKey].down);
