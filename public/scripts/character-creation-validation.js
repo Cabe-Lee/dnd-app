@@ -1,5 +1,3 @@
-// Form validation for character-creation.html. Displays required-field messages next to the submit button.
-
 const validationMessageEl = document.getElementById('pc-validation-message');
 
 function showMessage(messages) {
@@ -47,7 +45,6 @@ function validateBackground() {
   if (!skill1) msgs.push('Background: Skill 1 is required.');
   if (!skill2) msgs.push('Background: Skill 2 is required.');
 
-  // No validation on tools/equipment/personality because they are optional/free-text.
   return msgs;
 }
 
@@ -74,8 +71,6 @@ function validateAbilityScores() {
 }
 
 function validateSavingThrows() {
-  // Saving throws are readonly computed fields; we only care that the checkbox status is defined.
-  // No hard requirement — always optional in D&D. But we'll silently pass.
   return [];
 }
 
@@ -91,8 +86,6 @@ function validateHpAc() {
 }
 
 function validateSkills() {
-  // Skill checkboxes and modifiers are computed fields; they are always present.
-  // We do not require the user to check any specific skill boxes.
   return [];
 }
 
@@ -199,7 +192,7 @@ async function submitCharacter(data) {
 const submitBtn = document.getElementById('pc-submit');
 if (submitBtn) {
   submitBtn.addEventListener('click', async (e) => {
-    e.preventDefault(); // Always prevent default form submission
+    e.preventDefault(); // Always prevent default form 
     const errors = runValidation();
     if (errors.length > 0) {
       return;

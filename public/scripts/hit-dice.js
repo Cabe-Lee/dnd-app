@@ -43,8 +43,6 @@ function initHitDice() {
     const results = Array.from({ length: count }, () => rollDie(s));
     const total = results.reduce((sum, n) => sum + n, 0);
 
-    // Total: rolled hit dice + (CON modifier per hit die).
-    // Your comment indicates: "use the constitution modifier".
     const conMod = getConMod();
     const finalTotal = total + conMod * count;
 
@@ -55,7 +53,6 @@ function initHitDice() {
     const count = clampInt(hitDiceLevelInput.value, 1, 20, 1);
     const s = sides();
 
-    // Max hit dice + (CON modifier per hit die).
     const conMod = getConMod();
     const finalTotal = s * count + conMod * count;
 
@@ -67,4 +64,3 @@ function initHitDice() {
 }
 
 initHitDice();
-
